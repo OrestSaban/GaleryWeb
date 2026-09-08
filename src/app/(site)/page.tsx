@@ -99,12 +99,6 @@ export default async function HomePage() {
             <p className="mt-[22px] max-w-[52ch] text-[13px] leading-[1.75] text-muted">
               {ABOUT_2}
             </p>
-            <Link
-              href="/gallery"
-              className="mt-7 inline-block border-b border-accent pb-[3px] text-[12px] uppercase tracking-[0.12em]"
-            >
-              See all works
-            </Link>
           </div>
         </Reveal>
 
@@ -131,6 +125,17 @@ export default async function HomePage() {
                 </Reveal>
               ))}
             </div>
+          )}
+
+          {featured.length > 0 && (
+            <Reveal className="mt-14 flex justify-center">
+              <Link
+                href="/gallery"
+                className="border-b border-accent pb-[3px] text-[12px] uppercase tracking-[0.12em]"
+              >
+                See all works
+              </Link>
+            </Reveal>
           )}
         </section>
       </div>

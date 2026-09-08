@@ -109,16 +109,23 @@ body {
  */
 .cursor-flower__inner {
   display: block;
-  width: 56px;
-  height: 56px;
-  margin: -28px 0 0 -28px; /* centre on the pointer */
-  /* Swap to theme("colors.accent") for the orange variant. */
-  color: theme("colors.blue");
+  width: 60px;
+  height: 60px;
+  margin: -30px 0 0 -30px; /* half the size, to centre on the pointer */
+  /* Swap to theme("colors.blue") for the dusty-blue variant. */
+  color: theme("colors.accent");
   opacity: 0;
   transform: scale(0.55);
   transition:
     opacity 240ms ease,
     transform 420ms cubic-bezier(0.2, 0.7, 0.3, 1);
+  /*
+   * A thin outline on unpredictable artwork is easy to lose, so lift it off
+   * the surface: a tight contact shadow for edge definition plus a wider,
+   * softer one for depth.
+   */
+  filter: drop-shadow(0 1px 2px rgba(30, 28, 25, 0.35))
+    drop-shadow(0 3px 8px rgba(30, 28, 25, 0.3));
 }
 
 .cursor-flower[data-visible="true"] .cursor-flower__inner {

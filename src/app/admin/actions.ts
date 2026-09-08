@@ -53,6 +53,14 @@ function str(v: FormDataEntryValue | null) {
   return s.length ? s : null;
 }
 
+/** Positive integer from a form field, or null. Used for image dimensions. */
+function intOrNull(v: FormDataEntryValue | null) {
+  const raw = str(v);
+  if (!raw) return null;
+  const n = Number.parseInt(raw, 10);
+  return Number.isFinite(n) && n > 0 ? n : null;
+}
+
 function revalidateEverything() {
   revalidatePath("/", "layout");
   revalidatePath("/gallery");
@@ -85,6 +93,8 @@ export async function createPainting(formData: FormData): Promise<ActionResult> 
     year,
     price: str(formData.get("price")),
     image_url,
+    image_width: intOrNull(formData.get("image_width")),
+    image_height: intOrNull(formData.get("image_height")),
     is_available: formData.get("is_available") === "on",
     is_visible: formData.get("is_visible") === "on",
     sort_order: Number.parseInt(str(formData.get("sort_order")) ?? "0", 10) || 0,
@@ -123,6 +133,12 @@ export async function updatePainting(
       year,
       price: str(formData.get("price")),
       ...(nextImage ? { image_url: nextImage } : {}),
+      ...(intOrNull(formData.get("image_width")) && intOrNull(formData.get("image_height"))
+        ? {
+            image_width: intOrNull(formData.get("image_width")),
+            image_height: intOrNull(formData.get("image_height")),
+          }
+        : {}),
       is_available: formData.get("is_available") === "on",
       is_visible: formData.get("is_visible") === "on",
       sort_order: Number.parseInt(str(formData.get("sort_order")) ?? "0", 10) || 0,

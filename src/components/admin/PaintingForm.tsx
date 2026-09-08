@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useEffect, useRef, useState, useTransition } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { createPainting, updatePainting } from "@/app/admin/actions";
+import { readImageSize, readImageSizeFromUrl, type ImageSize } from "@/lib/imageSize";
 import type { Collection, Painting } from "@/lib/types";
 
 type Props = {
@@ -17,6 +18,11 @@ const MAX_BYTES = 10 * 1024 * 1024; // 10 MB
 export function PaintingForm({ collections, painting }: Props) {
   const isEdit = Boolean(painting);
   const [imageUrl, setImageUrl] = useState<string | null>(painting?.image_url ?? null);
+  const [imageSize, setImageSize] = useState<ImageSize | null>(
+    painting?.image_width && painting?.image_height
+      ? { width: painting.image_width, height: painting.image_height }
+      : null,
+  );
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [pending, startTransition] = useTransition();
@@ -39,6 +45,23 @@ export function PaintingForm({ collections, painting }: Props) {
     pendingPathRef.current = null;
     await createClient().storage.from("paintings").remove([path]);
   }
+
+  /*
+   * Backfill for works saved before dimensions were recorded: read the size
+   * off the stored image so opening the editor and hitting save is enough to
+   * fill it in. Runs once, only when the row is actually missing them.
+   */
+  const needsBackfill = Boolean(imageUrl) && imageSize === null;
+  useEffect(() => {
+    if (!needsBackfill || !imageUrl) return;
+    let cancelled = false;
+    readImageSizeFromUrl(imageUrl).then((size) => {
+      if (!cancelled && size) setImageSize(size);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [needsBackfill, imageUrl]);
 
   useEffect(() => {
     return () => {
@@ -64,6 +87,10 @@ export function PaintingForm({ collections, painting }: Props) {
 
     setUploading(true);
 
+    // Read the natural size before uploading: the gallery needs it to lay the
+    // work out at its real proportions instead of cropping it to a fixed frame.
+    const size = await readImageSize(file);
+
     // Drop the previous unsaved upload before replacing it.
     await discardPendingUpload();
 
@@ -86,6 +113,7 @@ export function PaintingForm({ collections, painting }: Props) {
     pendingPathRef.current = path;
     const { data } = supabase.storage.from("paintings").getPublicUrl(path);
     setImageUrl(data.publicUrl);
+    setImageSize(size);
     setUploading(false);
   }
 
@@ -96,6 +124,10 @@ export function PaintingForm({ collections, painting }: Props) {
       return;
     }
     formData.set("image_url", imageUrl);
+    if (imageSize) {
+      formData.set("image_width", String(imageSize.width));
+      formData.set("image_height", String(imageSize.height));
+    }
     if (painting?.image_url) formData.set("previous_image_url", painting.image_url);
 
     savingRef.current = true;

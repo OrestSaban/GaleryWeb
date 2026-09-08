@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { FadeInImage } from "@/components/FadeInImage";
 import { getPaintingNavigation, getVisiblePainting } from "@/lib/data";
 import { SITE, mailtoPainting } from "@/lib/utils";
+import { aspectRatio } from "@/lib/imageSize";
 
 export const revalidate = 60;
 
@@ -34,9 +35,13 @@ export default async function PaintingDetailPage({
   ]);
   if (!painting) notFound();
 
+  const ratio = aspectRatio(painting.image_width, painting.image_height);
+
   const index = navigation.findIndex((p) => p.id === painting.id);
   const prev =
-    index === -1 ? null : navigation[(index - 1 + navigation.length) % navigation.length];
+    index === -1
+      ? null
+      : navigation[(index - 1 + navigation.length) % navigation.length];
   const next =
     index === -1 ? null : navigation[(index + 1) % navigation.length];
 
@@ -44,7 +49,9 @@ export default async function PaintingDetailPage({
     painting.year ? { k: "Year", v: String(painting.year) } : null,
     painting.medium ? { k: "Medium", v: painting.medium } : null,
     painting.dimensions ? { k: "Dimensions", v: painting.dimensions } : null,
-    painting.collection ? { k: "Collection", v: painting.collection.name } : null,
+    painting.collection
+      ? { k: "Collection", v: painting.collection.name }
+      : null,
   ].filter(Boolean) as { k: string; v: string }[];
 
   return (
@@ -57,31 +64,39 @@ export default async function PaintingDetailPage({
       </Link>
 
       <div className="mt-7 grid items-start gap-8 sm:grid-cols-[1.35fr_1fr] sm:gap-16">
-        <div className="relative aspect-[4/5] w-full">
-          {painting.image_url ? (
-            /*
-             * `contain`, not `cover`: works range from 50×35 landscape to
-             * square to tall portrait, and this is the page whose whole job is
-             * showing the painting. Cropping it to the container's ratio would
-             * cut away up to half the image.
-             */
-            <FadeInImage
-              src={painting.image_url}
-              alt={painting.title}
-              fit="contain"
-              fill
-              priority
-              sizes="(max-width: 1024px) 100vw, 640px"
-            />
-          ) : (
-            <div
-              className="h-full w-full"
-              style={{
-                background:
-                  "repeating-linear-gradient(112deg, #EDE9E1 0 9px, #F4F1EA 9px 18px)",
-              }}
-            />
-          )}
+        {/*
+          The frame matches the work's own proportions, so nothing is cropped
+          and nothing is letterboxed. `max-width` caps the *width* — not the
+          height — at whatever keeps a tall work inside 80vh, which preserves
+          the ratio instead of squashing it back into a fixed box.
+        */}
+        <div
+          className="mx-auto w-full"
+          style={ratio ? { maxWidth: `calc(80vh * ${ratio})` } : undefined}
+        >
+          <div
+            className={`relative w-full ${ratio ? "" : "aspect-[4/5]"}`}
+            style={ratio ? { aspectRatio: String(ratio) } : undefined}
+          >
+            {painting.image_url ? (
+              <FadeInImage
+                src={painting.image_url}
+                alt={painting.title}
+                fit={ratio ? "cover" : "contain"}
+                fill
+                priority
+                sizes="(max-width: 1024px) 100vw, 640px"
+              />
+            ) : (
+              <div
+                className="h-full w-full"
+                style={{
+                  background:
+                    "repeating-linear-gradient(112deg, #EDE9E1 0 9px, #F4F1EA 9px 18px)",
+                }}
+              />
+            )}
+          </div>
         </div>
 
         <div>
@@ -114,7 +129,9 @@ export default async function PaintingDetailPage({
           )}
 
           <div className="mt-[34px] border-t border-line pt-[26px]">
-            <div className="font-serif text-[30px]">{painting.price ?? "Price on request"}</div>
+            <div className="font-serif text-[30px]">
+              {painting.price ?? "Price on request"}
+            </div>
             <div className="mt-1.5 flex items-center gap-2 text-[11px] tracking-[0.06em] text-muted">
               <span
                 aria-hidden
@@ -153,13 +170,20 @@ export default async function PaintingDetailPage({
             <span className="block text-[9px] uppercase tracking-[0.22em] text-muted">
               Previous
             </span>
-            <span className="mt-1.5 block font-serif text-[20px]">{prev.title}</span>
+            <span className="mt-1.5 block font-serif text-[20px]">
+              {prev.title}
+            </span>
           </Link>
-          <Link href={`/gallery/${next.id}`} className="text-right text-ink-soft">
+          <Link
+            href={`/gallery/${next.id}`}
+            className="text-right text-ink-soft"
+          >
             <span className="block text-[9px] uppercase tracking-[0.22em] text-muted">
               Next
             </span>
-            <span className="mt-1.5 block font-serif text-[20px]">{next.title}</span>
+            <span className="mt-1.5 block font-serif text-[20px]">
+              {next.title}
+            </span>
           </Link>
         </div>
       )}

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { FadeInImage } from "./FadeInImage";
+import { aspectRatio } from "@/lib/imageSize";
 import type { PaintingWithCollection } from "@/lib/types";
 
 /**
@@ -13,22 +14,35 @@ export function PaintingCard({
   painting: PaintingWithCollection;
   showYear?: boolean;
 }) {
-  const { id, title, price, image_url, is_available, year, collection } = painting;
+  const { id, title, price, image_url, is_available, year, collection } =
+    painting;
+  const ratio = aspectRatio(painting.image_width, painting.image_height);
 
   return (
     <Link
       href={`/gallery/${id}`}
       className="group block transition-transform duration-[420ms] ease-[cubic-bezier(.2,.7,.3,1)] hover:-translate-y-1.5"
     >
+      {/*
+        The frame takes the work's own proportions, so a landscape piece stays
+        landscape instead of being cropped into a portrait box — which is also
+        what gives the column layout its real masonry rhythm. Rows saved before
+        dimensions were recorded fall back to the old fixed frame, and use
+        `contain` so nothing gets cut off there either.
+      */}
       <div
         data-flower-target
-        className="relative aspect-[4/5] w-full overflow-hidden shadow-[0_2px_8px_-4px_rgba(30,28,25,0.18)] transition-shadow duration-[420ms] group-hover:shadow-[0_24px_44px_-26px_rgba(30,28,25,0.4)]"
+        style={ratio ? { aspectRatio: String(ratio) } : undefined}
+        className={`relative w-full overflow-hidden shadow-[0_2px_8px_-4px_rgba(30,28,25,0.18)] transition-shadow duration-[420ms] group-hover:shadow-[0_24px_44px_-26px_rgba(30,28,25,0.4)] ${
+          ratio ? "" : "aspect-[4/5]"
+        }`}
       >
         {image_url ? (
           <FadeInImage
             src={image_url}
             alt={title}
             fill
+            fit={ratio ? "cover" : "contain"}
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
             className="transition-transform duration-[1200ms] ease-out group-hover:scale-[1.03]"
           />
@@ -47,7 +61,9 @@ export function PaintingCard({
 
       <div className="mt-3.5 flex justify-between gap-3">
         <div className="min-w-0">
-          <div className="font-serif text-[19px] leading-tight text-ink">{title}</div>
+          <div className="font-serif text-[19px] leading-tight text-ink">
+            {title}
+          </div>
           <div className="mt-1.5 flex items-center gap-2 text-[11px] uppercase tracking-[0.14em] text-blue">
             <span className="truncate">
               {collection?.name ?? "Uncategorised"}

@@ -80,7 +80,7 @@ export function CursorFlower() {
             viewBox="0 0 512 512"
             fill="none"
             stroke="currentColor"
-            strokeWidth={26}
+            strokeWidth={12}
             strokeLinecap="round"
             strokeLinejoin="round"
           >

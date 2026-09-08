@@ -14,6 +14,8 @@ export type Painting = {
   year: number | null;
   price: string | null;
   image_url: string | null;
+  image_width: number | null;
+  image_height: number | null;
   is_available: boolean;
   is_visible: boolean;
   sort_order: number;
