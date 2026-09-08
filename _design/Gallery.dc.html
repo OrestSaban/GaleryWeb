@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
+<style>
+  html, body { margin: 0; padding: 0; background: #F1EFE9; }
+  * { box-sizing: border-box; }
+  a { color: #C4530F; text-decoration: none; }
+  a:hover { color: #A85B36; }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+  @keyframes softIn { from { opacity: 0; } to { opacity: 1; } }
+  [data-hscroll]::-webkit-scrollbar { display: none; }
+</style>
+</helmet>
+
+<div style="min-height: 100vh; background: #F1EFE9; font-family: 'DM Sans', system-ui, sans-serif; color: #1E1C19;">
+
+  <div style="position: sticky; top: 0; z-index: 50; display: flex; flex-wrap: wrap; align-items: center; gap: 20px; padding: 12px 24px; background: rgba(241,239,233,0.92); backdrop-filter: blur(8px); border-bottom: 1px solid #DFDACF;">
+    <div style="font-family: 'DM Sans', sans-serif; font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: #7A7367;">Mockups</div>
+    <div style="display: flex; gap: 4px;">
+      <sc-for list="{{ pages }}" as="p" hint-placeholder-count="4">
+        <button onClick="{{ p.onClick }}" style="font-family: 'DM Sans', sans-serif; font-size: 12px; letter-spacing: 0.04em; padding: 7px 14px; border-radius: 999px; border: 1px solid {{ p.border }}; background: {{ p.bg }}; color: {{ p.color }}; cursor: pointer;">{{ p.label }}</button>
+      </sc-for>
+    </div>
+    <div style="display: flex; gap: 4px; margin-left: auto;">
+      <sc-for list="{{ viewports }}" as="v" hint-placeholder-count="2">
+        <button onClick="{{ v.onClick }}" style="font-family: 'DM Sans', sans-serif; font-size: 12px; letter-spacing: 0.04em; padding: 7px 14px; border-radius: 999px; border: 1px solid {{ v.border }}; background: {{ v.bg }}; color: {{ v.color }}; cursor: pointer;">{{ v.label }}</button>
+      </sc-for>
+    </div>
+  </div>
+
+  <div ref="{{ cursorDotRef }}" style="position: fixed; left: 0; top: 0; width: 48px; height: 48px; margin: -24px 0 0 -24px; border-radius: 999px; border: 1px solid #F37021; background: none; display: flex; align-items: center; justify-content: center; pointer-events: none; opacity: 0; transition: opacity 300ms ease; z-index: 90;">
+    <span style="font-family: 'DM Sans', sans-serif; font-size: 9px; letter-spacing: 0.18em; text-transform: uppercase; color: #C4530F;">View</span>
+  </div>
+
+  <div ref="{{ outerRef }}" style="display: flex; justify-content: center; padding: 36px 20px 80px;">
+   <div style="width: {{ scaledWidth }}; height: {{ scaledHeight }};">
+    <div ref="{{ frameRef }}" style="width: {{ frameWidth }}; transform: scale({{ zoom }}); transform-origin: top left; position: relative; background: #FAFAF7; box-shadow: 0 1px 2px rgba(30,28,25,0.05), 0 24px 60px -30px rgba(30,28,25,0.28); overflow: hidden;">
+
+      <sc-if value="{{ showTopBorder }}" hint-placeholder-val="{{ true }}">
+        <div style="height: 3px; background: #F37021;"></div>
+      </sc-if>
+
+      <sc-if value="{{ isSite }}" hint-placeholder-val="{{ true }}">
+        <header style="display: flex; align-items: baseline; justify-content: space-between; gap: 16px; padding: {{ gutterPad }}; padding-top: 26px; padding-bottom: 26px;">
+          <div>
+            <div style="font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 500; letter-spacing: 0.02em; line-height: 1;">{{ artistName }}</div>
+            <div style="font-family: 'DM Sans', sans-serif; font-size: 9px; letter-spacing: 0.24em; text-transform: uppercase; color: #7A7367; margin-top: 6px;">Prague · Watercolour & Geometry</div>
+          </div>
+          <nav style="display: flex; gap: 22px; font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: #4A463F;">
+            <a href="#" onClick="{{ goHome }}" style="color: #4A463F;">Home</a>
+            <a href="#" onClick="{{ goGallery }}" style="color: #4A463F;">Gallery</a>
+            <a href="#contact" style="color: #4A463F;">Contact</a>
+          </nav>
+        </header>
+      </sc-if>
+
+      <!-- ============ HOMEPAGE ============ -->
+      <sc-if value="{{ showEdgeName }}" hint-placeholder-val="{{ true }}">
+        <div style="position: absolute; left: 0; top: 0; bottom: 0; width: 72px; pointer-events: none; z-index: 5;">
+          <div style="position: sticky; top: 420px; height: 0;">
+            <span style="position: absolute; left: 36px; top: 0; transform: rotate(-90deg); transform-origin: 0 0; display: block; font-family: 'DM Sans', sans-serif; font-size: 10px; letter-spacing: 0.42em; text-transform: uppercase; color: #B6AE9F; white-space: nowrap;">Ірина Ізотова — Iryna Izotova</span>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isHome }}" hint-placeholder-val="{{ true }}">
+        <div>
+          <section style="padding: {{ gutterPad }}; padding-top: 10px; padding-bottom: 0;">
+            <div style="position: relative; width: 100%; height: {{ heroHeight }}; background: repeating-linear-gradient(112deg, #EDE9E1 0 9px, #F4F1EA 9px 18px); display: flex; align-items: flex-end; animation: softIn 900ms ease both;">
+              <div style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;">
+                <span style="font-family: ui-monospace, Menlo, monospace; font-size: 11px; letter-spacing: 0.12em; color: #A79F91; text-transform: uppercase;">hero painting — 2400×1400</span>
+              </div>
+            </div>
+            <div style="display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 18px; margin-top: 34px;">
+              <h1 style="font-family: 'Cormorant Garamond', serif; font-weight: 400; font-size: {{ h1Size }}; line-height: 1.02; letter-spacing: -0.01em; margin: 0; max-width: 15ch;">{{ artistName }}</h1>
+              <p style="font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: {{ taglineSize }}; color: #4A463F; margin: 0; max-width: 30ch; line-height: 1.35;">{{ tagline }}</p>
+            </div>
+          </section>
+
+          <div data-reveal style="display: flex; align-items: center; gap: 14px; padding: {{ gutterPad }}; padding-top: 56px; padding-bottom: 56px;">
+            <div style="flex: 1; height: 1px; background: #E4DFD5;"></div>
+            <div style="width: 6px; height: 6px; transform: rotate(45deg); background: #F37021;"></div>
+            <div style="flex: 1; height: 1px; background: #E4DFD5;"></div>
+          </div>
+
+          <section data-reveal style="display: grid; grid-template-columns: {{ aboutCols }}; gap: {{ aboutGap }}; align-items: start; padding: {{ gutterPad }}; padding-bottom: 90px;">
+            <div style="width: 100%; height: {{ portraitHeight }}; background: repeating-linear-gradient(112deg, #EAE5DC 0 9px, #F2EEE7 9px 18px); display: flex; align-items: center; justify-content: center;">
+              <span style="font-family: ui-monospace, Menlo, monospace; font-size: 10px; letter-spacing: 0.12em; color: #A79F91; text-transform: uppercase;">portrait</span>
+            </div>
+            <div>
+              <div style="font-size: 9px; letter-spacing: 0.24em; text-transform: uppercase; color: #4E7397;">About the artist</div>
+              <p style="font-family: 'Cormorant Garamond', serif; font-size: {{ aboutSize }}; line-height: 1.5; color: #26241F; margin: 18px 0 0; max-width: 46ch;">{{ aboutText }}</p>
+              <p style="font-size: 13px; line-height: 1.75; color: #6B655B; margin: 22px 0 0; max-width: 52ch;">{{ aboutSecondary }}</p>
+              <a href="#" onClick="{{ goGallery }}" style="display: inline-block; margin-top: 28px; font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; border-bottom: 1px solid #F37021; padding-bottom: 3px;">See all works</a>
+            </div>
+          </section>
+
+          <section data-reveal style="padding: {{ gutterPad }}; padding-bottom: 90px;">
+            <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 16px; margin-bottom: 34px;">
+              <h2 style="font-family: 'Cormorant Garamond', serif; font-weight: 400; font-size: {{ h2Size }}; margin: 0;">Featured works</h2>
+              <span style="font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: #7A7367;">2024 — 2026</span>
+            </div>
+            <div style="display: grid; grid-template-columns: {{ featuredCols }}; gap: {{ cardGap }};">
+              <sc-for list="{{ featured }}" as="w" hint-placeholder-count="3">
+                <div data-reveal onClick="{{ w.onOpen }}" style="cursor: pointer; transition: transform 420ms cubic-bezier(.2,.7,.3,1);" style-hover="transform: translateY(-6px);">
+                  <div onMouseEnter="{{ w.onCursorIn }}" onMouseMove="{{ w.onCursorMove }}" onMouseLeave="{{ w.onCursorOut }}" style="width: 100%; height: {{ w.h }}; cursor: {{ cardCursor }}; background: repeating-linear-gradient(112deg, #EDE9E1 0 9px, #F4F1EA 9px 18px); display: flex; align-items: center; justify-content: center;">
+                    <span style="font-family: ui-monospace, Menlo, monospace; font-size: 10px; letter-spacing: 0.1em; color: #A79F91; text-transform: uppercase;">{{ w.ratioLabel }}</span>
+                  </div>
+                  <div style="display: flex; justify-content: space-between; gap: 12px; margin-top: 14px;">
+                    <div>
+                      <div style="font-family: 'Cormorant Garamond', serif; font-size: 19px; line-height: 1.2;">{{ w.title }}</div>
+                      <div style="font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: #4E7397; margin-top: 5px;">{{ w.collection }} · {{ w.year }}</div>
+                    </div>
+                    <div style="font-size: 13px; color: #4A463F; white-space: nowrap;">{{ w.price }}</div>
+                  </div>
+                </div>
+              </sc-for>
+            </div>
+          </section>
+
+          <section id="contact" data-reveal style="padding: {{ gutterPad }}; padding-top: 70px; padding-bottom: 80px; border-top: 1px solid #E4DFD5; background: #F7F5F0;">
+            <div style="display: grid; grid-template-columns: {{ aboutCols }}; gap: {{ aboutGap }};">
+              <div>
+                <h2 style="font-family: 'Cormorant Garamond', serif; font-weight: 400; font-size: {{ h2Size }}; margin: 0 0 14px;">Get in touch</h2>
+                <p style="font-size: 13px; line-height: 1.8; color: #6B655B; margin: 0; max-width: 40ch;">{{ contactText }}</p>
+              </div>
+              <div style="display: flex; flex-direction: column; gap: 14px; font-size: 14px;">
+                <a href="mailto:studio@irynaizotova.art" style="border-bottom: 1px solid #E4DFD5; padding-bottom: 12px; color: #26241F;">studio@irynaizotova.art</a>
+                <a href="#" style="border-bottom: 1px solid #E4DFD5; padding-bottom: 12px; color: #26241F;">Instagram — @iryna.izotova</a>
+                <span style="font-size: 12px; color: #7A7367; letter-spacing: 0.04em;">Based in Prague — studio visits by arrangement</span>
+              </div>
+            </div>
+          </section>
+        </div>
+      </sc-if>
+
+      <!-- ============ GALLERY ============ -->
+      <sc-if value="{{ isGallery }}" hint-placeholder-val="{{ true }}">
+        <div style="padding: {{ gutterPad }}; padding-top: 20px; padding-bottom: 100px;">
+          <h1 style="font-family: 'Cormorant Garamond', serif; font-weight: 400; font-size: {{ h1Size }}; margin: 0; line-height: 1;">Works</h1>
+          <p style="font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 20px; color: #6B655B; margin: 14px 0 0;">{{ countLabel }}</p>
+
+          <div style="display: flex; align-items: center; justify-content: space-between; gap: 16px; margin: 40px 0 0; padding-bottom: 20px; border-bottom: 1px solid #E4DFD5;">
+            <div data-hscroll style="display: flex; gap: 10px; overflow-x: {{ filterOverflow }}; scrollbar-width: none; flex-wrap: {{ filterWrap }}; margin-left: {{ filterBleed }}; margin-right: {{ filterBleed }}; padding-left: {{ filterInset }}; padding-right: {{ filterInset }};">
+              <sc-for list="{{ filters }}" as="f" hint-placeholder-count="3">
+                <button onClick="{{ f.onClick }}" style="flex: none; font-family: 'DM Sans', sans-serif; font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; padding: 9px 18px; border-radius: 999px; cursor: pointer; border: 1px solid {{ f.border }}; background: {{ f.bg }}; color: {{ f.color }};">{{ f.label }}</button>
+              </sc-for>
+            </div>
+            <sc-if value="{{ showViewToggle }}" hint-placeholder-val="{{ true }}">
+              <div style="display: flex; align-items: center; gap: 12px; flex: none;">
+                <button onClick="{{ setGridMode }}" title="Grid" style="font-family: 'DM Sans', sans-serif; font-size: 18px; line-height: 1; border: none; background: none; cursor: pointer; padding: 2px; color: {{ gridIconColor }};">⊞</button>
+                <span style="width: 1px; height: 14px; background: #E4DFD5;"></span>
+                <button onClick="{{ setWallMode }}" title="Wall" style="font-family: 'DM Sans', sans-serif; font-size: 18px; line-height: 1; border: none; background: none; cursor: pointer; padding: 2px; color: {{ wallIconColor }};">⧉</button>
+              </div>
+            </sc-if>
+          </div>
+
+          <sc-if value="{{ isGridMode }}" hint-placeholder-val="{{ true }}">
+            <div style="columns: {{ masonryCols }}; column-gap: {{ cardGap }}; margin-top: 44px;">
+              <sc-for list="{{ works }}" as="w" hint-placeholder-count="6">
+                <div data-reveal onClick="{{ w.onOpen }}" style="break-inside: avoid; margin-bottom: 52px; cursor: pointer; transition: transform 420ms cubic-bezier(.2,.7,.3,1);" style-hover="transform: translateY(-6px);">
+                  <div onMouseEnter="{{ w.onCursorIn }}" onMouseMove="{{ w.onCursorMove }}" onMouseLeave="{{ w.onCursorOut }}" style="width: 100%; height: {{ w.h }}; cursor: {{ cardCursor }}; background: repeating-linear-gradient(112deg, #EDE9E1 0 9px, #F4F1EA 9px 18px); display: flex; align-items: center; justify-content: center;">
+                    <span style="font-family: ui-monospace, Menlo, monospace; font-size: 10px; letter-spacing: 0.1em; color: #A79F91; text-transform: uppercase;">{{ w.ratioLabel }}</span>
+                  </div>
+                  <div style="display: flex; justify-content: space-between; gap: 12px; margin-top: 14px;">
+                    <div>
+                      <div style="font-family: 'Cormorant Garamond', serif; font-size: 19px; line-height: 1.2;">{{ w.title }}</div>
+                      <div style="font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: #4E7397; margin-top: 5px;">{{ w.collection }}</div>
+                    </div>
+                    <div style="font-size: 13px; color: #4A463F; white-space: nowrap;">{{ w.price }}</div>
+                  </div>
+                </div>
+              </sc-for>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ isWallMode }}" hint-placeholder-val="{{ false }}">
+            <div style="position: relative; height: {{ wallHeight }}; margin-top: 54px;">
+              <sc-for list="{{ wallWorks }}" as="w" hint-placeholder-count="9">
+                <div onClick="{{ w.onOpen }}" onMouseEnter="{{ w.onEnter }}" onMouseLeave="{{ w.onLeave }}" style="position: absolute; left: {{ w.x }}; top: {{ w.y }}; width: {{ w.w }}; height: {{ w.hh }}; transform: rotate({{ w.rot }}); z-index: {{ w.z }}; box-shadow: {{ w.shadow }}; cursor: pointer; transition: transform 480ms cubic-bezier(.2,.7,.3,1), box-shadow 480ms ease; background: repeating-linear-gradient(112deg, #EDE9E1 0 9px, #F4F1EA 9px 18px);">
+                  <sc-if value="{{ w.hovered }}" hint-placeholder-val="{{ false }}">
+                    <div style="position: absolute; left: 50%; bottom: -54px; transform: translateX(-50%); background: #22201C; padding: 10px 14px; white-space: nowrap; pointer-events: none;">
+                      <div style="font-family: 'Cormorant Garamond', serif; font-size: 17px; line-height: 1.1; color: #FAFAF7;">{{ w.title }}</div>
+                      <div style="font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: #C6BFB2; margin-top: 4px;">{{ w.price }}</div>
+                    </div>
+                  </sc-if>
+                </div>
+              </sc-for>
+            </div>
+          </sc-if>
+        </div>
+      </sc-if>
+
+      <!-- ============ DETAIL ============ -->
+      <sc-if value="{{ isDetail }}" hint-placeholder-val="{{ true }}">
+        <div style="padding: {{ gutterPad }}; padding-top: 8px; padding-bottom: 90px;">
+          <a href="#" onClick="{{ goGallery }}" style="font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: #7A7367;">← Back to works</a>
+
+          <div style="display: grid; grid-template-columns: {{ detailCols }}; gap: {{ aboutGap }}; align-items: start; margin-top: 28px;">
+            <div ref="{{ detailImageRef }}" style="width: 100%; height: {{ detailImageHeight }}; background: repeating-linear-gradient(112deg, #EDE9E1 0 9px, #F4F1EA 9px 18px); display: flex; align-items: center; justify-content: center;">
+              <span style="font-family: ui-monospace, Menlo, monospace; font-size: 11px; letter-spacing: 0.1em; color: #A79F91; text-transform: uppercase;">{{ current.ratioLabel }}</span>
+            </div>
+
+            <div>
+              <h1 style="font-family: 'Cormorant Garamond', serif; font-weight: 400; font-size: {{ detailTitleSize }}; line-height: 1.08; margin: 0;">{{ current.title }}</h1>
+              <div style="font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: #C4530F; margin-top: 12px;">{{ current.collection }}</div>
+
+              <div style="display: flex; align-items: center; gap: 12px; margin: 30px 0;">
+                <div style="flex: 1; height: 1px; background: #E4DFD5;"></div>
+                <div style="width: 5px; height: 5px; transform: rotate(45deg); background: #0000FF;"></div>
+                <div style="flex: 1; height: 1px; background: #E4DFD5;"></div>
+              </div>
+
+              <dl style="margin: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 22px 16px;">
+                <sc-for list="{{ current.specs }}" as="s" hint-placeholder-count="4">
+                  <div>
+                    <dt style="font-size: 9px; letter-spacing: 0.22em; text-transform: uppercase; color: #6F685D;">{{ s.k }}</dt>
+                    <dd style="margin: 7px 0 0; font-size: 14px; color: #26241F;">{{ s.v }}</dd>
+                  </div>
+                </sc-for>
+              </dl>
+
+              <div style="margin-top: 34px; padding-top: 26px; border-top: 1px solid #E4DFD5;">
+                <div style="font-family: 'Cormorant Garamond', serif; font-size: 30px;">{{ current.price }}</div>
+                <div style="font-size: 11px; color: #7A7367; margin-top: 6px; letter-spacing: 0.06em;">Unframed, on paper. Shipping quoted separately.</div>
+              </div>
+
+              <p style="font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 18px; line-height: 1.55; color: #4A463F; margin: 30px 0 0;">{{ current.note }}</p>
+
+              <div style="display: flex; flex-wrap: wrap; gap: 12px; margin-top: 34px;">
+                <a href="mailto:studio@irynaizotova.art" style="background: #F37021; color: #22201C; font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; padding: 15px 26px;">Interested? Contact me</a>
+                <a href="#" style="border: 1px solid #D9D3C8; color: #4A463F; font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; padding: 15px 26px;">Instagram</a>
+              </div>
+            </div>
+          </div>
+
+          <div style="display: flex; justify-content: space-between; gap: 20px; margin-top: 80px; padding-top: 26px; border-top: 1px solid #E4DFD5;">
+            <a href="#" onClick="{{ prev }}" style="color: #4A463F;">
+              <span style="display: block; font-size: 9px; letter-spacing: 0.22em; text-transform: uppercase; color: #6F685D;">Previous</span>
+              <span style="display: block; font-family: 'Cormorant Garamond', serif; font-size: 20px; margin-top: 6px;">{{ prevTitle }}</span>
+            </a>
+            <a href="#" onClick="{{ next }}" style="color: #4A463F; text-align: right;">
+              <span style="display: block; font-size: 9px; letter-spacing: 0.22em; text-transform: uppercase; color: #6F685D;">Next</span>
+              <span style="display: block; font-family: 'Cormorant Garamond', serif; font-size: 20px; margin-top: 6px;">{{ nextTitle }}</span>
+            </a>
+          </div>
+        </div>
+      </sc-if>
+
+      <!-- ============ ADMIN ============ -->
+      <sc-if value="{{ isAdmin }}" hint-placeholder-val="{{ true }}">
+        <div style="background: #FCFCFB; min-height: 700px;">
+          <div style="display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 18px {{ adminPad }}; border-bottom: 1px solid #E7E4DE;">
+            <div style="display: flex; align-items: baseline; gap: 12px;">
+              <span style="font-family: 'Cormorant Garamond', serif; font-size: 18px;">Iryna Izotova</span>
+              <span style="font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: #7A7367;">Admin</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 14px; font-size: 12px; color: #6B655B;">
+              <span>studio@irynaizotova.art</span>
+              <span style="color: #C9C3B8;">|</span>
+              <a href="#" style="color: #4E7397;">Sign out</a>
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: {{ adminCols }}; gap: 26px; padding: 26px {{ adminPad }} 60px;">
+
+            <div style="display: flex; flex-direction: column; gap: 22px; min-width: 0;">
+              <div style="display: grid; grid-template-columns: {{ statCols }}; gap: 10px;">
+                <sc-for list="{{ stats }}" as="s" hint-placeholder-count="3">
+                  <div style="border: 1px solid #E7E4DE; background: #FFFFFF; padding: 14px 16px;">
+                    <div style="font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; color: #6F685D;">{{ s.k }}</div>
+                    <div style="font-family: 'DM Sans', sans-serif; font-size: 24px; margin-top: 6px;">{{ s.v }}</div>
+                  </div>
+                </sc-for>
+              </div>
+
+              <div style="border: 1px solid #E7E4DE; background: #FFFFFF;">
+                <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 14px 16px; border-bottom: 1px solid #EFECE6;">
+                  <div style="font-size: 13px; font-weight: 500;">Paintings</div>
+                  <button onClick="{{ focusForm }}" style="font-family: 'DM Sans', sans-serif; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; padding: 8px 14px; border: none; background: #26241F; color: #FAFAF7; cursor: pointer;">+ Add painting</button>
+                </div>
+                <div style="overflow-x: auto;">
+                  <table style="width: 100%; border-collapse: collapse; font-size: 13px; min-width: 520px;">
+                    <thead>
+                      <tr>
+                        <th style="text-align: left; font-size: 9px; letter-spacing: 0.18em; text-transform: uppercase; color: #6F685D; font-weight: 400; padding: 10px 16px; border-bottom: 1px solid #EFECE6;">Work</th>
+                        <th style="text-align: left; font-size: 9px; letter-spacing: 0.18em; text-transform: uppercase; color: #6F685D; font-weight: 400; padding: 10px 12px; border-bottom: 1px solid #EFECE6;">Collection</th>
+                        <th style="text-align: left; font-size: 9px; letter-spacing: 0.18em; text-transform: uppercase; color: #6F685D; font-weight: 400; padding: 10px 12px; border-bottom: 1px solid #EFECE6;">Price</th>
+                        <th style="text-align: left; font-size: 9px; letter-spacing: 0.18em; text-transform: uppercase; color: #6F685D; font-weight: 400; padding: 10px 12px; border-bottom: 1px solid #EFECE6;">Visible</th>
+                        <th style="text-align: right; font-size: 9px; letter-spacing: 0.18em; text-transform: uppercase; color: #6F685D; font-weight: 400; padding: 10px 16px; border-bottom: 1px solid #EFECE6;">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <sc-for list="{{ adminRows }}" as="r" hint-placeholder-count="6">
+                        <tr>
+                          <td style="padding: 11px 16px; border-bottom: 1px solid #F3F1EC;">
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                              <div style="width: 34px; height: 26px; flex: none; background: repeating-linear-gradient(112deg, #ECE8E0 0 5px, #F5F2EC 5px 10px);"></div>
+                              <div>
+                                <div>{{ r.title }}</div>
+                                <div style="font-size: 11px; color: #6F685D;">{{ r.year }} · {{ r.dimensions }}</div>
+                              </div>
+                            </div>
+                          </td>
+                          <td style="padding: 11px 12px; border-bottom: 1px solid #F3F1EC; color: #6B655B;">{{ r.collection }}</td>
+                          <td style="padding: 11px 12px; border-bottom: 1px solid #F3F1EC;">{{ r.price }}</td>
+                          <td style="padding: 11px 12px; border-bottom: 1px solid #F3F1EC;">
+                            <button onClick="{{ r.onToggle }}" style="font-family: 'DM Sans', sans-serif; font-size: 11px; letter-spacing: 0.06em; padding: 5px 10px; cursor: pointer; border: 1px solid {{ r.chipBorder }}; background: {{ r.chipBg }}; color: {{ r.chipColor }};">{{ r.visibleLabel }}</button>
+                          </td>
+                          <td style="padding: 11px 16px; border-bottom: 1px solid #F3F1EC; text-align: right; white-space: nowrap;">
+                            <a href="#" style="font-size: 12px; color: #4E7397;">Edit</a>
+                            <span style="color: #DDD8CF; margin: 0 8px;">/</span>
+                            <a href="#" onClick="{{ r.onDelete }}" style="font-size: 12px; color: #C4530F;">Delete</a>
+                          </td>
+                        </tr>
+                      </sc-for>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 22px; min-width: 0;">
+              <div style="border: 1px solid #E7E4DE; background: #FFFFFF; padding: 16px;">
+                <div style="font-size: 13px; font-weight: 500; margin-bottom: 4px;">Add painting</div>
+                <div style="width: 100%; height: 118px; border: 1px dashed #D6D0C4; background: #FBFAF7; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; margin-top: 14px;">
+                  <span style="font-size: 12px; color: #6B655B;">Drop image or browse</span>
+                  <span style="font-family: ui-monospace, Menlo, monospace; font-size: 10px; color: #6F685D;">JPG / PNG · min 2000px wide</span>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 16px;">
+                  <sc-for list="{{ formFields }}" as="f" hint-placeholder-count="6">
+                    <label style="display: block; grid-column: span {{ f.span }};">
+                      <span style="display: block; font-size: 9px; letter-spacing: 0.18em; text-transform: uppercase; color: #6F685D; margin-bottom: 6px;">{{ f.label }}</span>
+                      <input placeholder="{{ f.placeholder }}" style="width: 100%; font-family: 'DM Sans', sans-serif; font-size: 13px; color: #26241F; padding: 9px 11px; border: 1px solid #E2DED6; background: #FFFFFF; outline: none;" style-focus="border-color: #4E7397;">
+                    </label>
+                  </sc-for>
+                </div>
+                <label style="display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 16px; padding-top: 14px; border-top: 1px solid #EFECE6;">
+                  <span style="font-size: 12px; color: #4A463F;">Visible on public gallery</span>
+                  <button onClick="{{ toggleNewVisible }}" style="width: 42px; height: 24px; border-radius: 999px; border: none; cursor: pointer; padding: 3px; display: flex; justify-content: {{ newVisibleAlign }}; background: {{ newVisibleBg }};">
+                    <span style="width: 18px; height: 18px; border-radius: 999px; background: #FFFFFF;"></span>
+                  </button>
+                </label>
+                <div style="display: flex; gap: 10px; margin-top: 18px;">
+                  <button style="flex: 1; font-family: 'DM Sans', sans-serif; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; padding: 12px; border: none; background: #26241F; color: #FAFAF7; cursor: pointer;">Save painting</button>
+                  <button style="font-family: 'DM Sans', sans-serif; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; padding: 12px 16px; border: 1px solid #E2DED6; background: #FFFFFF; color: #6B655B; cursor: pointer;">Cancel</button>
+                </div>
+              </div>
+
+              <div style="border: 1px solid #E7E4DE; background: #FFFFFF; padding: 16px;">
+                <div style="font-size: 13px; font-weight: 500;">Collections</div>
+                <div style="display: flex; flex-direction: column; margin-top: 10px;">
+                  <sc-for list="{{ collectionRows }}" as="c" hint-placeholder-count="3">
+                    <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 11px 0; border-bottom: 1px solid #F3F1EC;">
+                      <div>
+                        <div style="font-size: 13px;">{{ c.name }}</div>
+                        <div style="font-size: 11px; color: #6F685D;">{{ c.count }} works</div>
+                      </div>
+                      <div style="white-space: nowrap;">
+                        <a href="#" style="font-size: 12px; color: #4E7397;">Rename</a>
+                        <span style="color: #DDD8CF; margin: 0 8px;">/</span>
+                        <a href="#" style="font-size: 12px; color: #C4530F;">Delete</a>
+                      </div>
+                    </div>
+                  </sc-for>
+                </div>
+                <div style="display: flex; gap: 8px; margin-top: 14px;">
+                  <input placeholder="New collection name" style="flex: 1; min-width: 0; font-family: 'DM Sans', sans-serif; font-size: 13px; padding: 9px 11px; border: 1px solid #E2DED6; outline: none;" style-focus="border-color: #4E7397;">
+                  <button style="font-family: 'DM Sans', sans-serif; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; padding: 9px 14px; border: 1px solid #E2DED6; background: #FBFAF7; color: #4A463F; cursor: pointer;">Add</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isSite }}" hint-placeholder-val="{{ true }}">
+        <footer style="padding: 30px {{ footerPad }}; border-top: 1px solid #E4DFD5; display: flex; flex-wrap: wrap; gap: 12px; justify-content: space-between; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: #6F685D;">
+          <span>© 2026 Iryna Izotova</span>
+          <span>Ivano-Frankivsk → Prague</span>
+        </footer>
+      </sc-if>
+
+    </div>
+   </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;artistName&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Iryna Izotova&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;tagline&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Soft watercolours, quiet geometry, and swallows in both.&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;showTopBorder&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Details&quot;}}">
+class Component extends DCLogic {
+  state = { page: "home", vp: "desktop", filter: "All", index: 0, newVisible: true, hidden: {}, avail: 0, frameH: 0, view: "grid", wallHover: null };
+
+  wallSlots = [
+    { x: 0, y: 40, w: 300, h: 230, rot: -1.2, z: 2 },
+    { x: 336, y: 0, w: 420, h: 290, rot: 0.8, z: 3 },
+    { x: 792, y: 52, w: 250, h: 210, rot: -0.6, z: 2 },
+    { x: 40, y: 350, w: 340, h: 250, rot: 1.4, z: 3 },
+    { x: 414, y: 330, w: 300, h: 300, rot: -1, z: 4 },
+    { x: 752, y: 372, w: 330, h: 230, rot: 0.6, z: 3 },
+    { x: 0, y: 690, w: 380, h: 260, rot: 1.1, z: 2 },
+    { x: 418, y: 682, w: 268, h: 300, rot: -1.5, z: 3 },
+    { x: 726, y: 712, w: 356, h: 250, rot: 0.7, z: 2 }
+  ];
+  outerRef = { current: null };
+  frameRef = { current: null };
+
+  setOuter = (node) => {
+    this.outerRef.current = node;
+    if (node) { this.observe(); this.measure(); requestAnimationFrame(this.measure); }
+  };
+
+  setFrame = (node) => {
+    this.frameRef.current = node;
+    if (node) { this.observe(); requestAnimationFrame(this.measure); }
+  };
+
+  measure = () => {
+    const outer = this.outerRef.current, frame = this.frameRef.current;
+    if (!outer || !outer.clientWidth) return;
+    const avail = outer.clientWidth - 40;
+    if (avail <= 0) return;
+    const frameH = frame ? frame.getBoundingClientRect().height / (this.zoomFor(this.state.avail) || 1) : 0;
+    if (Math.abs(avail - this.state.avail) > 1 || Math.abs(frameH - this.state.frameH) > 1) {
+      this.setState({ avail, frameH });
+    }
+    this.observe();
+  };
+
+  observe = () => {
+    if (!this.ro) { this.observed = this.observed || new WeakSet(); this.ro = new ResizeObserver(this.measure); }
+    this.observed = this.observed || new WeakSet();
+    [this.outerRef.current, this.frameRef.current].forEach((el) => {
+      if (el && !this.observed.has(el)) { this.observed.add(el); this.ro.observe(el); }
+    });
+  };
+
+  zoomFor(avail) {
+    const w = this.state.vp === "mobile" ? 390 : 1280;
+    return Math.min(1, (avail || w) / w);
+  }
+
+  componentDidMount() {
+    this.observed = new WeakSet();
+    this.ro = new ResizeObserver(this.measure);
+    this.ro.observe(document.documentElement);
+    this.measure();
+    requestAnimationFrame(() => { this.measure(); requestAnimationFrame(this.measure); });
+    this.timers = [60, 200, 600, 1400].map((ms) => setTimeout(this.measure, ms));
+    this.poll = setInterval(() => {
+      const el = this.outerRef.current;
+      if (el && el.clientWidth > 0) { this.measure(); if (this.state.avail > 0) { clearInterval(this.poll); this.poll = null; } }
+    }, 120);
+    requestAnimationFrame(this.wireReveals);
+    window.addEventListener("resize", this.measure);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(this.measure);
+  }
+
+  cursorDotRef = { current: null };
+  detailImageRef = { current: null };
+
+  setCursorDot = (n) => { this.cursorDotRef.current = n; };
+
+  setDetailImage = (n) => {
+    this.detailImageRef.current = n;
+    if (n) this.playUnroll();
+  };
+
+  playUnroll = () => {
+    const el = this.detailImageRef.current;
+    if (!el || this.state.vp === "print" || !el.animate) return;
+    const key = "d" + this.state.index;
+    if (this.unrollKey === key) return;
+    this.unrollKey = key;
+    el.animate(
+      [
+        { transform: "scaleX(0.14)", opacity: 0.3 },
+        { transform: "scaleX(1)", opacity: 1 }
+      ],
+      { duration: 600, easing: "cubic-bezier(.16,.84,.28,1)", fill: "both" }
+    );
+  };
+
+  moveCursor = (e) => {
+    const dot = this.cursorDotRef.current;
+    if (!dot || this.state.vp === "mobile") return;
+    dot.style.transform = "translate(" + e.clientX + "px, " + e.clientY + "px)";
+    dot.style.opacity = "1";
+  };
+
+  hideCursor = () => {
+    const dot = this.cursorDotRef.current;
+    if (!dot) return;
+    dot.style.opacity = "0";
+  };
+
+  seen = new WeakSet();
+
+  wireReveals = () => {
+    const frame = this.frameRef.current;
+    if (!frame) return;
+    if (!this.io) {
+      this.io = new IntersectionObserver((entries) => {
+        entries.forEach((en) => {
+          if (!en.isIntersecting) return;
+          const el = en.target;
+          el.style.opacity = "1";
+          el.style.transform = "none";
+          this.io.unobserve(el);
+        });
+      }, { rootMargin: "0px 0px -12% 0px", threshold: 0.08 });
+    }
+    frame.querySelectorAll("[data-reveal]").forEach((el) => {
+      if (this.seen.has(el)) return;
+      this.seen.add(el);
+      const sibs = el.parentElement ? Array.prototype.filter.call(el.parentElement.children, (c) => c.hasAttribute("data-reveal")) : [el];
+      const stagger = sibs.length > 1 ? Math.min(sibs.indexOf(el), 8) * 120 : 0;
+      el.style.opacity = "0";
+      el.style.transform = "translateY(20px)";
+      el.style.transition = "opacity 900ms cubic-bezier(.2,.7,.3,1) " + stagger + "ms, transform 900ms cubic-bezier(.2,.7,.3,1) " + stagger + "ms";
+      this.io.observe(el);
+      requestAnimationFrame(() => {
+        const r = el.getBoundingClientRect();
+        if (r.top < window.innerHeight * 0.9) { el.style.opacity = "1"; el.style.transform = "none"; this.io.unobserve(el); }
+      });
+    });
+  };
+
+  componentDidUpdate() { requestAnimationFrame(() => { this.measure(); this.wireReveals(); this.playUnroll(); }); }
+
+  componentWillUnmount() {
+    if (this.ro) this.ro.disconnect();
+    if (this.io) this.io.disconnect();
+    (this.timers || []).forEach(clearTimeout);
+    if (this.poll) clearInterval(this.poll);
+    window.removeEventListener("resize", this.measure);
+  }
+
+  works() {
+    return [
+      { title: "Swallows, Late April", collection: "Illustrations", price: "price TBC", dimensions: "40 × 30 cm", medium: "Watercolour on paper", h: 420, ratioLabel: "4:3 landscape", note: "Swallows come back to the same eaves every year. I draw them more often than anything else." },
+      { title: "Salt Bloom", collection: "Illustrations", price: "price TBC", dimensions: "36 × 26 cm", medium: "Watercolour and salt on paper", h: 520, ratioLabel: "3:4 portrait", note: "Salt scattered into the wet wash — it pulls the pigment open and leaves its own pattern." },
+      { title: "Three Colours, One Bird", collection: "Geometry", price: "price TBC", dimensions: "50 × 50 cm", medium: "Gouache on paper", h: 340, ratioLabel: "3:2 landscape", note: "Ochre, paper white, and one blue. The swallow is only angles." },
+      { title: "Quiet Geometry No. 4", collection: "Geometry", price: "price TBC", dimensions: "40 × 40 cm", medium: "Gouache and ink on paper", h: 400, ratioLabel: "1:1 square", note: "" },
+      { title: "Pastel Morning, Salt Edges", collection: "Illustrations", price: "price TBC", dimensions: "30 × 24 cm", medium: "Watercolour and salt on paper", h: 460, ratioLabel: "3:4 portrait", note: "" },
+      { title: "Garden Detail (Anti-Stress)", collection: "Illustrations", price: "price TBC", dimensions: "42 × 30 cm", medium: "Watercolour and ink on paper", h: 380, ratioLabel: "5:4 landscape", note: "" },
+      { title: "Cubist Swallow", collection: "Geometry", price: "price TBC", dimensions: "35 × 35 cm", medium: "Gouache on paper", h: 420, ratioLabel: "1:1 square", note: "" },
+      { title: "Blue, Ochre, Paper", collection: "Geometry", price: "price TBC", dimensions: "50 × 35 cm", medium: "Gouache on paper", h: 330, ratioLabel: "3:2 landscape", note: "" },
+      { title: "Two Swallows over the Roofs", collection: "Illustrations", price: "not for sale", dimensions: "28 × 22 cm", medium: "Watercolour on paper", h: 470, ratioLabel: "4:5 portrait", note: "" }
+    ].map((w, i) => Object.assign({}, w, { id: i, year: [2026, 2025, 2025, 2024, 2026, 2023, 2025, 2024, 2026][i] }));
+  }
+
+  go = (page) => (e) => { if (e) e.preventDefault(); this.setState({ page }); };
+
+  renderVals() {
+    const mob = this.state.vp === "mobile";
+    const all = this.works();
+    const page = this.state.page;
+    const filter = this.state.filter;
+    const scale = (deskVal, mobVal) => (mob ? mobVal : deskVal);
+
+    const pill = (on) => on
+      ? { bg: "#26241F", color: "#FAFAF7", border: "#26241F" }
+      : { bg: "transparent", color: "#6B655B", border: "#DDD8CF" };
+
+    const pages = [
+      ["home", "Homepage"], ["gallery", "Gallery"], ["detail", "Painting"], ["admin", "Admin"]
+    ].map(([k, label]) => Object.assign({ label, onClick: this.go(k) }, pill(page === k)));
+
+    const viewports = [["desktop", "Desktop"], ["mobile", "Mobile"]].map(([k, label]) =>
+      Object.assign({ label, onClick: () => this.setState({ vp: k }) }, pill(this.state.vp === k)));
+
+    const filters = ["All", "Illustrations", "Geometry"].map((name) => {
+      const on = filter === name;
+      return {
+        label: name,
+        onClick: () => this.setState({ filter: name }),
+        bg: on ? "#F37021" : "transparent",
+        color: on ? "#22201C" : "#6B655B",
+        border: on ? "#F37021" : "#DFDACF"
+      };
+    });
+
+    const openWork = (id) => (e) => { if (e) e.preventDefault(); this.hideCursor(); this.setState({ page: "detail", index: id }); };
+    const decorate = (w) => Object.assign({}, w, {
+      onOpen: openWork(w.id),
+      h: (mob ? Math.round(w.h * 0.78) : w.h) + "px",
+      onCursorIn: mob ? undefined : this.moveCursor,
+      onCursorMove: mob ? undefined : this.moveCursor,
+      onCursorOut: mob ? undefined : this.hideCursor
+    });
+
+    const shown = all.filter((w) => !this.state.hidden[w.id]);
+    const filtered = (filter === "All" ? shown : shown.filter((w) => w.collection === filter)).map(decorate);
+
+    const cur = all[this.state.index] || all[0];
+    const prevW = all[(this.state.index - 1 + all.length) % all.length];
+    const nextW = all[(this.state.index + 1) % all.length];
+
+    const adminRows = all.map((w) => {
+      const vis = !this.state.hidden[w.id];
+      return Object.assign({}, w, {
+        visibleLabel: vis ? "Visible" : "Hidden",
+        chipBg: vis ? "#F2F5F8" : "#FBF6F3",
+        chipColor: vis ? "#4A6C8C" : "#A85B36",
+        chipBorder: vis ? "#D5E0EA" : "#EBD9CF",
+        onToggle: () => this.setState((s) => ({ hidden: Object.assign({}, s.hidden, { [w.id]: vis }) })),
+        onDelete: (e) => { if (e) e.preventDefault(); }
+      });
+    });
+
+    const counts = {};
+    all.forEach((w) => { counts[w.collection] = (counts[w.collection] || 0) + 1; });
+
+    return {
+      artistName: this.props.artistName ?? "Iryna Izotova",
+      tagline: this.props.tagline ?? "Soft watercolours, quiet geometry, and swallows in both.",
+      showTopBorder: this.props.showTopBorder ?? true,
+      aboutText: "I began with sculpture and art history, and I still love them, though for now I have neither the space nor the materials. My early work was dense and decorative — the kind you can disappear into for an afternoon — and over time it settled into two ways of working: soft watercolours in pastel tones, where I scatter salt into the wash for texture, and geometric pieces with clean lines and never more than three colours. Swallows keep finding their way into both.",
+      aboutSecondary: "Art school, then college. Ivano-Frankivsk, now Prague. Looking often at Anna Wericky, Arthur Hostovsky, and a little Dalí.",
+      contactText: "If a work catches your eye, feel free to reach out. I am happy to share more photos, details, and talk through options together.",
+
+      pages, viewports, filters,
+      showEdgeName: page === "home" && !mob,
+      isSite: page !== "admin",
+      isHome: page === "home",
+      isGallery: page === "gallery",
+      isDetail: page === "detail",
+      isAdmin: page === "admin",
+      goHome: this.go("home"),
+      goGallery: this.go("gallery"),
+
+      outerRef: this.setOuter,
+      frameRef: this.setFrame,
+      cursorDotRef: this.setCursorDot,
+      detailImageRef: this.setDetailImage,
+      cardCursor: mob ? "pointer" : "none",
+
+      filterOverflow: mob ? "auto" : "visible",
+      filterWrap: mob ? "nowrap" : "wrap",
+      filterBleed: mob ? "-24px" : "0px",
+      filterInset: mob ? "24px" : "0px",
+
+      showViewToggle: !mob,
+      isGridMode: mob || this.state.view === "grid",
+      isWallMode: !mob && this.state.view === "wall",
+      gridIconColor: this.state.view === "grid" ? "#F37021" : "#CFC8BC",
+      wallIconColor: this.state.view === "wall" ? "#F37021" : "#CFC8BC",
+      setGridMode: () => this.setState({ view: "grid" }),
+      setWallMode: () => this.setState({ view: "wall" }),
+      wallHeight: (this.wallSlots[Math.min(filtered.length, 9) - 1] ? this.wallSlots.slice(0, filtered.length).reduce((m, s) => Math.max(m, s.y + s.h), 0) + 30 : 400) + "px",
+      wallWorks: filtered.slice(0, 9).map((w, i) => {
+        const slot = this.wallSlots[i];
+        const hovered = this.state.wallHover === i;
+        return {
+          title: w.title,
+          price: w.price,
+          onOpen: w.onOpen,
+          x: slot.x + "px",
+          y: slot.y + "px",
+          w: slot.w + "px",
+          hh: slot.h + "px",
+          rot: (hovered ? 0 : slot.rot) + "deg",
+          z: hovered ? 20 : slot.z,
+          shadow: hovered ? "0 26px 46px -26px rgba(30,28,25,0.5)" : "0 2px 8px -4px rgba(30,28,25,0.22)",
+          hovered,
+          onEnter: () => this.setState({ wallHover: i }),
+          onLeave: () => this.setState((s) => (s.wallHover === i ? { wallHover: null } : null))
+        };
+      }),
+      zoom: this.zoomFor(this.state.avail),
+      scaledWidth: Math.round((mob ? 390 : 1280) * this.zoomFor(this.state.avail)) + "px",
+      scaledHeight: this.state.frameH ? Math.round(this.state.frameH * this.zoomFor(this.state.avail)) + "px" : "auto",
+      frameWidth: mob ? "390px" : "1280px",
+      gutterPad: mob ? "24px" : "72px",
+      footerPad: mob ? "24px" : "72px",
+      adminPad: mob ? "18px" : "34px",
+      heroHeight: scale("560px", "300px"),
+      h1Size: scale("74px", "42px"),
+      h2Size: scale("38px", "28px"),
+      taglineSize: scale("24px", "19px"),
+      aboutSize: scale("26px", "21px"),
+      aboutCols: mob ? "1fr" : "0.85fr 1.15fr",
+      aboutGap: mob ? "28px" : "64px",
+      portraitHeight: scale("420px", "300px"),
+      featuredCols: mob ? "1fr" : "repeat(3, 1fr)",
+      cardGap: mob ? "34px" : "40px",
+      masonryCols: mob ? 1 : 3,
+      detailCols: mob ? "1fr" : "1.35fr 1fr",
+      detailImageHeight: scale("660px", "320px"),
+      detailTitleSize: scale("46px", "32px"),
+      adminCols: mob ? "1fr" : "1.5fr 1fr",
+      statCols: "repeat(3, 1fr)",
+
+      featured: all.slice(0, mob ? 3 : 3).map(decorate),
+      works: filtered,
+      countLabel: filtered.length + (filtered.length === 1 ? " work" : " works") + (filter === "All" ? " available" : " in " + filter.toLowerCase()),
+
+      current: Object.assign({}, cur, {
+        ratioLabel: cur.ratioLabel,
+        note: cur.note || "Available from the studio — write and I will send more photos and details.",
+        specs: [
+          { k: "Year", v: String(cur.year) },
+          { k: "Medium", v: cur.medium },
+          { k: "Dimensions", v: cur.dimensions },
+          { k: "Collection", v: cur.collection }
+        ]
+      }),
+      prevTitle: prevW.title,
+      nextTitle: nextW.title,
+      prev: (e) => { if (e) e.preventDefault(); this.setState((s) => ({ index: (s.index - 1 + all.length) % all.length })); },
+      next: (e) => { if (e) e.preventDefault(); this.setState((s) => ({ index: (s.index + 1) % all.length })); },
+
+      adminRows,
+      stats: [
+        { k: "Paintings", v: String(all.length) },
+        { k: "Visible", v: String(shown.length) },
+        { k: "Collections", v: "2" }
+      ],
+      collectionRows: ["Illustrations", "Geometry"].map((name) => ({ name, count: counts[name] || 0 })),
+      formFields: [
+        { label: "Title", placeholder: "Swallows, Late April", span: 2 },
+        { label: "Collection", placeholder: "Illustrations", span: 1 },
+        { label: "Year", placeholder: "2026", span: 1 },
+        { label: "Medium", placeholder: "Watercolour on paper", span: 1 },
+        { label: "Dimensions", placeholder: "40 × 30 cm", span: 1 },
+        { label: "Price", placeholder: "price TBC", span: 2 }
+      ],
+      newVisible: this.state.newVisible,
+      newVisibleBg: this.state.newVisible ? "#4E7397" : "#DDD8CF",
+      newVisibleAlign: this.state.newVisible ? "flex-end" : "flex-start",
+      toggleNewVisible: () => this.setState((s) => ({ newVisible: !s.newVisible })),
+      focusForm: () => {}
+    };
+  }
+}
+</script>
+</body>
+</html>

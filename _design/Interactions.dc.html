@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
+<style>
+  html, body { margin: 0; padding: 0; background: #F1EFE9; }
+  * { box-sizing: border-box; }
+  a { color: #C4530F; text-decoration: none; }
+  a:hover { color: #9E4207; }
+  [data-hscroll]::-webkit-scrollbar { display: none; }
+</style>
+</helmet>
+
+<div style="min-height: 100vh; background: #F1EFE9; font-family: 'DM Sans', system-ui, sans-serif; color: #1E1C19; padding: 48px 24px 100px;">
+  <div style="max-width: 1240px; margin: 0 auto;">
+
+    <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 20px; flex-wrap: wrap; padding-bottom: 22px; border-bottom: 1px solid #DFDACF;">
+      <div>
+        <div style="font-size: 10px; letter-spacing: 0.24em; text-transform: uppercase; color: #7A7367;">Iryna Izotova — Interaction specs</div>
+        <h1 style="font-family: 'Cormorant Garamond', serif; font-weight: 400; font-size: 44px; margin: 10px 0 0; line-height: 1;">Five motions, before and after</h1>
+      </div>
+      <div style="font-size: 12px; color: #6F685D; max-width: 34ch; line-height: 1.6;">Every timing below is slow and eased out — nothing bounces. Live states respond to your mouse where marked.</div>
+    </div>
+
+    <!-- 1 — CUSTOM CURSOR -->
+    <section style="padding: 66px 0 0;">
+      <div style="display: flex; align-items: baseline; gap: 14px;">
+        <span style="font-family: 'Cormorant Garamond', serif; font-size: 22px; color: #C4530F;">01</span>
+        <h2 style="font-family: 'Cormorant Garamond', serif; font-weight: 400; font-size: 30px; margin: 0;">Custom cursor on painting cards</h2>
+        <span style="font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: #7A7367;">Desktop only · live</span>
+      </div>
+      <p style="font-size: 13px; line-height: 1.8; color: #4A463F; margin: 14px 0 30px; max-width: 62ch;">The system cursor is hidden over the card. A 48px orange disc carrying VIEW follows the pointer, and the card lifts 6px with a soft shadow over 320ms.</p>
+
+      <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 40px; max-width: 760px;">
+        <div>
+          <div style="font-family: ui-monospace, Menlo, monospace; font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: #7A7367; margin-bottom: 12px;">before — default</div>
+          <div style="background: #FAFAF7; padding: 24px;">
+            <div style="width: 100%; height: 260px; background: repeating-linear-gradient(112deg, #EDE9E1 0 9px, #F4F1EA 9px 18px); display: flex; align-items: center; justify-content: center;">
+              <span style="font-family: ui-monospace, Menlo, monospace; font-size: 10px; letter-spacing: 0.1em; color: #A79F91; text-transform: uppercase;">4:3 landscape</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; gap: 12px; margin-top: 14px;">
+              <div>
+                <div style="font-family: 'Cormorant Garamond', serif; font-size: 19px;">Swallows, Late April</div>
+                <div style="font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: #4E7397; margin-top: 5px;">Illustrations</div>
+              </div>
+              <div style="font-size: 13px; color: #4A463F; white-space: nowrap;">price TBC</div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div style="font-family: ui-monospace, Menlo, monospace; font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: #C4530F; margin-bottom: 12px;">after — hover (move your mouse in)</div>
+          <div style="background: #FAFAF7; padding: 24px;">
+            <div ref="{{ cursorZone }}" onMouseEnter="{{ onCursorEnter }}" onMouseMove="{{ onCursorMove }}" onMouseLeave="{{ onCursorLeave }}" style="position: relative; cursor: none; transform: translateY(-6px); box-shadow: 0 20px 40px -26px rgba(30,28,25,0.45); transition: transform 320ms cubic-bezier(.2,.7,.3,1), box-shadow 320ms cubic-bezier(.2,.7,.3,1);">
+              <div style="width: 100%; height: 260px; background: repeating-linear-gradient(112deg, #EDE9E1 0 9px, #F4F1EA 9px 18px);"></div>
+              <div ref="{{ cursorDot }}" style="position: absolute; left: 62%; top: 46%; width: 48px; height: 48px; margin: -24px 0 0 -24px; border-radius: 999px; background: #F37021; display: flex; align-items: center; justify-content: center; pointer-events: none; transition: opacity 260ms ease;">
+                <span style="font-family: 'DM Sans', sans-serif; font-size: 9px; font-weight: 500; letter-spacing: 0.18em; color: #FFFFFF;">VIEW</span>
+              </div>
+            </div>
+            <div style="display: flex; justify-content: space-between; gap: 12px; margin-top: 20px;">
+              <div>
+                <div style="font-family: 'Cormorant Garamond', serif; font-size: 19px;">Swallows, Late April</div>
+                <div style="font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: #4E7397; margin-top: 5px;">Illustrations</div>
+              </div>
+              <div style="font-size: 13px; color: #4A463F; white-space: nowrap;">price TBC</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div style="display: flex; align-items: center; gap: 14px; padding: 60px 0;">
+      <div style="flex: 1; height: 1px; background: #DFDACF;"></div>
+      <div style="width: 6px; height: 6px; transform: rotate(45deg); background: #F37021;"></div>
+      <div style="flex: 1; height: 1px; background: #DFDACF;"></div>
+    </div>
+
+    <!-- 2 — FADE IN ON SCROLL -->
+    <section>
+      <div style="display: flex; align-items: baseline; gap: 14px;">
+        <span style="font-family: 'Cormorant Garamond', serif; font-size: 22px; color: #C4530F;">02</span>
+        <h2 style="font-family: 'Cormorant Garamond', serif; font-weight: 400; font-size: 30px; margin: 0;">Fade-in on scroll, staggered</h2>
+        <span style="font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: #7A7367;">Homepage + gallery</span>
+      </div>
+      <p style="font-size: 13px; line-height: 1.8; color: #4A463F; margin: 14px 0 30px; max-width: 62ch;">Cards enter at opacity 0 and translateY 20px, resolving over 900ms with 120ms between neighbours. Three rows frozen mid-sequence below.</p>
+
+      <div style="background: #FAFAF7; padding: 40px;">
+        <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 28px 32px;">
+          <sc-for list="{{ staggerCards }}" as="c" hint-placeholder-count="9">
+            <div style="opacity: {{ c.opacity }}; transform: translateY({{ c.shift }});">
+              <div style="width: 100%; height: {{ c.h }}; background: repeating-linear-gradient(112deg, #EDE9E1 0 9px, #F4F1EA 9px 18px); border: {{ c.outline }};"></div>
+              <div style="display: flex; justify-content: space-between; gap: 10px; margin-top: 12px;">
+                <div style="font-family: 'Cormorant Garamond', serif; font-size: 17px;">{{ c.title }}</div>
+                <div style="font-size: 12px; color: #4A463F;">price TBC</div>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 32px; margin-top: 30px; padding-top: 22px; border-top: 1px solid #EFECE6;">
+          <sc-for list="{{ staggerNotes }}" as="n" hint-placeholder-count="3">
+            <div style="font-family: ui-monospace, Menlo, monospace; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: #7A7367;">{{ n }}</div>
+          </sc-for>
+        </div>
+      </div>
+    </section>
+
+    <div style="display: flex; align-items: center; gap: 14px; padding: 60px 0;">
+      <div style="flex: 1; height: 1px; background: #DFDACF;"></div>
+      <div style="width: 6px; height: 6px; transform: rotate(45deg); background: #F37021;"></div>
+      <div style="flex: 1; height: 1px; background: #DFDACF;"></div>
+    </div>
+
+    <!-- 3 — MOBILE FILTER SCROLL -->
+    <section>
+      <div style="display: flex; align-items: baseline; gap: 14px;">
+        <span style="font-family: 'Cormorant Garamond', serif; font-size: 22px; color: #C4530F;">03</span>
+        <h2 style="font-family: 'Cormorant Garamond', serif; font-weight: 400; font-size: 30px; margin: 0;">Edge-bleed filter row</h2>
+        <span style="font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: #7A7367;">Mobile 375 · live, drag sideways</span>
+      </div>
+      <p style="font-size: 13px; line-height: 1.8; color: #4A463F; margin: 14px 0 30px; max-width: 62ch;">Tabs run past the right edge so the row reads as scrollable. Cards below go full width, one per row, gutters only at the page edge.</p>
+
+      <div style="display: flex; gap: 40px; flex-wrap: wrap;">
+        <div>
+          <div style="font-family: ui-monospace, Menlo, monospace; font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: #7A7367; margin-bottom: 12px;">before — row at rest</div>
+          <div style="width: 375px; background: #FAFAF7; overflow: hidden; box-shadow: 0 1px 2px rgba(30,28,25,0.05);">
+            <div style="height: 3px; background: #F37021;"></div>
+            <div style="padding: 20px 20px 0;">
+              <div style="font-family: 'Cormorant Garamond', serif; font-size: 34px; line-height: 1;">Works</div>
+            </div>
+            <div data-hscroll style="display: flex; gap: 10px; overflow-x: auto; scrollbar-width: none; padding: 22px 0 22px 20px; margin-top: 6px;">
+              <sc-for list="{{ mobileFilters }}" as="f" hint-placeholder-count="3">
+                <button onClick="{{ f.onClick }}" style="flex: none; font-family: 'DM Sans', sans-serif; font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; padding: 10px 20px; border-radius: 999px; cursor: pointer; border: 1px solid {{ f.border }}; background: {{ f.bg }}; color: {{ f.color }};">{{ f.label }}</button>
+              </sc-for>
+              <div style="flex: none; width: 20px;"></div>
+            </div>
+            <div style="height: 1px; background: #EFECE6;"></div>
+            <div style="padding: 26px 20px 30px; display: flex; flex-direction: column; gap: 34px;">
+              <sc-for list="{{ mobileCards }}" as="c" hint-placeholder-count="2">
+                <div>
+                  <div style="width: 100%; height: {{ c.h }}; background: repeating-linear-gradient(112deg, #EDE9E1 0 9px, #F4F1EA 9px 18px);"></div>
+                  <div style="display: flex; justify-content: space-between; gap: 10px; margin-top: 13px;">
+                    <div>
+                      <div style="font-family: 'Cormorant Garamond', serif; font-size: 19px;">{{ c.title }}</div>
+                      <div style="font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: #4E7397; margin-top: 5px;">{{ c.collection }}</div>
+                    </div>
+                    <div style="font-size: 13px; color: #4A463F; white-space: nowrap;">price TBC</div>
+                  </div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div style="font-family: ui-monospace, Menlo, monospace; font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: #C4530F; margin-bottom: 12px;">after — scrolled, geometry active</div>
+          <div style="width: 375px; background: #FAFAF7; overflow: hidden; box-shadow: 0 1px 2px rgba(30,28,25,0.05);">
+            <div style="height: 3px; background: #F37021;"></div>
+            <div style="padding: 20px 20px 0;">
+              <div style="font-family: 'Cormorant Garamond', serif; font-size: 34px; line-height: 1;">Works</div>
+            </div>
+            <div style="display: flex; gap: 10px; padding: 22px 0 22px 0; margin-top: 6px; overflow: hidden;">
+              <div style="flex: none; width: 20px; margin-left: -76px;"></div>
+              <sc-for list="{{ scrolledFilters }}" as="f" hint-placeholder-count="3">
+                <button style="flex: none; font-family: 'DM Sans', sans-serif; font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; padding: 10px 20px; border-radius: 999px; cursor: pointer; border: 1px solid {{ f.border }}; background: {{ f.bg }}; color: {{ f.color }};">{{ f.label }}</button>
+              </sc-for>
+            </div>
+            <div style="height: 1px; background: #EFECE6;"></div>
+            <div style="padding: 26px 20px 30px; display: flex; flex-direction: column; gap: 34px;">
+              <sc-for list="{{ mobileCardsGeometry }}" as="c" hint-placeholder-count="2">
+                <div>
+                  <div style="width: 100%; height: {{ c.h }}; background: repeating-linear-gradient(112deg, #EDE9E1 0 9px, #F4F1EA 9px 18px);"></div>
+                  <div style="display: flex; justify-content: space-between; gap: 10px; margin-top: 13px;">
+                    <div>
+                      <div style="font-family: 'Cormorant Garamond', serif; font-size: 19px;">{{ c.title }}</div>
+                      <div style="font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: #4E7397; margin-top: 5px;">{{ c.collection }}</div>
+                    </div>
+                    <div style="font-size: 13px; color: #4A463F; white-space: nowrap;">price TBC</div>
+                  </div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div style="display: flex; align-items: center; gap: 14px; padding: 60px 0;">
+      <div style="flex: 1; height: 1px; background: #DFDACF;"></div>
+      <div style="width: 6px; height: 6px; transform: rotate(45deg); background: #F37021;"></div>
+      <div style="flex: 1; height: 1px; background: #DFDACF;"></div>
+    </div>
+
+    <!-- 4 — UNROLL -->
+    <section>
+      <div style="display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap;">
+        <span style="font-family: 'Cormorant Garamond', serif; font-size: 22px; color: #C4530F;">04</span>
+        <h2 style="font-family: 'Cormorant Garamond', serif; font-weight: 400; font-size: 30px; margin: 0;">Detail image unrolls open</h2>
+        <span style="font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: #7A7367;">600ms · ease-out</span>
+      </div>
+      <p style="font-size: 13px; line-height: 1.8; color: #4A463F; margin: 14px 0 30px; max-width: 62ch;">On entering a painting page the image opens from a narrow centred band to full width, like a canvas being unrolled. Height holds; only width and opacity move.</p>
+
+      <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 26px;">
+        <sc-for list="{{ unrollFrames }}" as="f" hint-placeholder-count="3">
+          <div>
+            <div style="font-family: ui-monospace, Menlo, monospace; font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: {{ f.labelColor }}; margin-bottom: 12px;">{{ f.label }}</div>
+            <div style="background: #FAFAF7; padding: 24px; height: 320px; display: flex; align-items: center; justify-content: center;">
+              <div style="width: {{ f.w }}; height: 250px; opacity: {{ f.opacity }}; background: repeating-linear-gradient(112deg, #EDE9E1 0 9px, #F4F1EA 9px 18px); display: flex; align-items: center; justify-content: center; overflow: hidden;">
+                <span style="font-family: ui-monospace, Menlo, monospace; font-size: 10px; letter-spacing: 0.1em; color: #A79F91; text-transform: uppercase; white-space: nowrap; opacity: {{ f.captionOpacity }};">3:4 portrait</span>
+              </div>
+            </div>
+            <div style="font-size: 12px; color: #6F685D; margin-top: 12px;">{{ f.note }}</div>
+          </div>
+        </sc-for>
+      </div>
+    </section>
+
+    <div style="display: flex; align-items: center; gap: 14px; padding: 60px 0;">
+      <div style="flex: 1; height: 1px; background: #DFDACF;"></div>
+      <div style="width: 6px; height: 6px; transform: rotate(45deg); background: #F37021;"></div>
+      <div style="flex: 1; height: 1px; background: #DFDACF;"></div>
+    </div>
+
+    <!-- 5 — GRID VS WALL -->
+    <section>
+      <div style="display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap;">
+        <span style="font-family: 'Cormorant Garamond', serif; font-size: 22px; color: #C4530F;">05</span>
+        <h2 style="font-family: 'Cormorant Garamond', serif; font-weight: 400; font-size: 30px; margin: 0;">Grid and wall view</h2>
+        <span style="font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: #7A7367;">Desktop · wall labels live on hover</span>
+      </div>
+      <p style="font-size: 13px; line-height: 1.8; color: #4A463F; margin: 14px 0 30px; max-width: 62ch;">Two icons sit at the top right of the gallery. Wall view hangs the works at their real relative sizes with rotations under two degrees and a little overlap; labels stay hidden until hover.</p>
+
+      <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 32px;">
+
+        <div>
+          <div style="font-family: ui-monospace, Menlo, monospace; font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: #7A7367; margin-bottom: 12px;">grid — default</div>
+          <div style="background: #FAFAF7; padding: 26px; min-height: 470px;">
+            <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-bottom: 18px; border-bottom: 1px solid #EFECE6;">
+              <span style="font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: #7A7367;">9 works</span>
+              <div style="display: flex; align-items: center; gap: 12px;">
+                <span style="font-size: 17px; line-height: 1; color: #F37021;">⊞</span>
+                <span style="width: 1px; height: 14px; background: #E4DFD5;"></span>
+                <span style="font-size: 17px; line-height: 1; color: #CFC8BC;">⧉</span>
+              </div>
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 22px 18px; margin-top: 24px;">
+              <sc-for list="{{ gridCards }}" as="c" hint-placeholder-count="6">
+                <div>
+                  <div style="width: 100%; height: 118px; background: repeating-linear-gradient(112deg, #EDE9E1 0 9px, #F4F1EA 9px 18px);"></div>
+                  <div style="font-family: 'Cormorant Garamond', serif; font-size: 15px; line-height: 1.25; margin-top: 10px;">{{ c.title }}</div>
+                  <div style="font-size: 9px; letter-spacing: 0.16em; text-transform: uppercase; color: #4E7397; margin-top: 4px;">{{ c.collection }}</div>
+                  <div style="font-size: 11px; color: #4A463F; margin-top: 4px;">price TBC</div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div style="font-family: ui-monospace, Menlo, monospace; font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: #C4530F; margin-bottom: 12px;">wall — hung, labels on hover</div>
+          <div style="background: #FAFAF7; padding: 26px; min-height: 470px;">
+            <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-bottom: 18px; border-bottom: 1px solid #EFECE6;">
+              <span style="font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: #7A7367;">9 works</span>
+              <div style="display: flex; align-items: center; gap: 12px;">
+                <span style="font-size: 17px; line-height: 1; color: #CFC8BC;">⊞</span>
+                <span style="width: 1px; height: 14px; background: #E4DFD5;"></span>
+                <span style="font-size: 17px; line-height: 1; color: #F37021;">⧉</span>
+              </div>
+            </div>
+            <div style="position: relative; height: 372px; margin-top: 24px;">
+              <sc-for list="{{ wallWorks }}" as="w" hint-placeholder-count="8">
+                <div onMouseEnter="{{ w.onEnter }}" onMouseLeave="{{ w.onLeave }}" style="position: absolute; left: {{ w.x }}; top: {{ w.y }}; width: {{ w.w }}; height: {{ w.h }}; transform: rotate({{ w.rot }}); cursor: pointer; transition: transform 420ms cubic-bezier(.2,.7,.3,1), box-shadow 420ms ease; box-shadow: {{ w.shadow }}; background: repeating-linear-gradient(112deg, #EDE9E1 0 9px, #F4F1EA 9px 18px); z-index: {{ w.z }};">
+                  <sc-if value="{{ w.hovered }}" hint-placeholder-val="{{ false }}">
+                    <div style="position: absolute; left: 50%; bottom: -46px; transform: translateX(-50%); background: #22201C; color: #FAFAF7; padding: 8px 12px; white-space: nowrap; pointer-events: none;">
+                      <div style="font-family: 'Cormorant Garamond', serif; font-size: 15px; line-height: 1.1;">{{ w.title }}</div>
+                      <div style="font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: #C6BFB2; margin-top: 3px;">price TBC</div>
+                    </div>
+                  </sc-if>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1300,&quot;height&quot;:900}}">
+class Component extends DCLogic {
+  state = { mobileFilter: "All", wallHover: null };
+  cursorZone = { current: null };
+  cursorDot = { current: null };
+
+  setZone = (n) => { this.cursorZone.current = n; };
+  setDot = (n) => { this.cursorDot.current = n; };
+
+  moveDot = (e) => {
+    const zone = this.cursorZone.current, dot = this.cursorDot.current;
+    if (!zone || !dot) return;
+    const r = zone.getBoundingClientRect();
+    dot.style.left = (e.clientX - r.left) + "px";
+    dot.style.top = (e.clientY - r.top) + "px";
+  };
+
+  pill(on) {
+    return on
+      ? { bg: "#F37021", color: "#22201C", border: "#F37021" }
+      : { bg: "transparent", color: "#6B655B", border: "#DFDACF" };
+  }
+
+  renderVals() {
+    const rows = [
+      { opacity: 1, shift: "0px", outline: "none" },
+      { opacity: 0.45, shift: "10px", outline: "none" },
+      { opacity: 0.06, shift: "20px", outline: "1px dashed #DFDACF" }
+    ];
+    const titles = [
+      ["Swallows, Late April", 150], ["Salt Bloom", 176], ["Three Colours, One Bird", 132],
+      ["Quiet Geometry No. 4", 158], ["Pastel Morning, Salt Edges", 140], ["Cubist Swallow", 166],
+      ["Blue, Ochre, Paper", 144], ["Garden Detail (Anti-Stress)", 160], ["Two Swallows over the Roofs", 150]
+    ];
+
+    const wall = [
+      { title: "Salt Bloom", x: 0, y: 34, w: 104, h: 138, rot: -1.4, z: 2 },
+      { title: "Swallows, Late April", x: 118, y: 0, w: 158, h: 118, rot: 0.8, z: 3 },
+      { title: "Cubist Swallow", x: 292, y: 20, w: 96, h: 96, rot: -0.6, z: 2 },
+      { title: "Blue, Ochre, Paper", x: 118, y: 132, w: 138, h: 96, rot: -1.1, z: 4 },
+      { title: "Quiet Geometry No. 4", x: 268, y: 130, w: 112, h: 112, rot: 1.6, z: 3 },
+      { title: "Pastel Morning, Salt Edges", x: 0, y: 188, w: 100, h: 128, rot: 1.2, z: 3 },
+      { title: "Garden Detail (Anti-Stress)", x: 112, y: 244, w: 148, h: 104, rot: -0.7, z: 2 },
+      { title: "Two Swallows over the Roofs", x: 276, y: 258, w: 92, h: 114, rot: 1.9, z: 2 }
+    ];
+
+    return {
+      cursorZone: this.setZone,
+      cursorDot: this.setDot,
+      onCursorEnter: this.moveDot,
+      onCursorMove: this.moveDot,
+      onCursorLeave: () => {},
+
+      staggerCards: titles.map((t, i) => Object.assign({ title: t[0], h: t[1] + "px" }, rows[Math.floor(i / 3)])),
+      staggerNotes: [
+        "row 1 · t = 0ms · settled, opacity 1",
+        "row 2 · t = 120ms · opacity 0.45, y +10px",
+        "row 3 · t = 240ms · opacity 0, y +20px"
+      ],
+
+      mobileFilters: ["All", "Illustrations", "Geometry"].map((label) =>
+        Object.assign({ label, onClick: () => this.setState({ mobileFilter: label }) }, this.pill(this.state.mobileFilter === label))),
+      scrolledFilters: ["All", "Illustrations", "Geometry"].map((label) =>
+        Object.assign({ label }, this.pill(label === "Geometry"))),
+      mobileCards: [
+        { title: "Swallows, Late April", collection: "Illustrations", h: "250px" },
+        { title: "Salt Bloom", collection: "Illustrations", h: "300px" }
+      ],
+      mobileCardsGeometry: [
+        { title: "Three Colours, One Bird", collection: "Geometry", h: "228px" },
+        { title: "Cubist Swallow", collection: "Geometry", h: "300px" }
+      ],
+
+      unrollFrames: [
+        { label: "frame 1 · 0ms", labelColor: "#7A7367", w: "16%", opacity: 0.35, captionOpacity: 0, note: "Narrow band, centred, still translucent." },
+        { label: "frame 2 · 300ms", labelColor: "#7A7367", w: "56%", opacity: 0.8, captionOpacity: 0.4, note: "Widening outward from the centre line." },
+        { label: "frame 3 · 600ms", labelColor: "#C4530F", w: "100%", opacity: 1, captionOpacity: 1, note: "Fully open. Nothing overshoots or settles back." }
+      ],
+
+      gridCards: [
+        { title: "Swallows, Late April", collection: "Illustrations" },
+        { title: "Salt Bloom", collection: "Illustrations" },
+        { title: "Three Colours, One Bird", collection: "Geometry" },
+        { title: "Quiet Geometry No. 4", collection: "Geometry" },
+        { title: "Pastel Morning, Salt Edges", collection: "Illustrations" },
+        { title: "Cubist Swallow", collection: "Geometry" }
+      ],
+
+      wallWorks: wall.map((w, i) => {
+        const hovered = this.state.wallHover === i;
+        return {
+          title: w.title,
+          x: w.x + "px",
+          y: w.y + "px",
+          w: w.w + "px",
+          h: w.h + "px",
+          rot: (hovered ? 0 : w.rot) + "deg",
+          z: hovered ? 20 : w.z,
+          shadow: hovered ? "0 22px 40px -24px rgba(30,28,25,0.5)" : "0 2px 6px -3px rgba(30,28,25,0.22)",
+          hovered,
+          onEnter: () => this.setState({ wallHover: i }),
+          onLeave: () => this.setState((s) => (s.wallHover === i ? { wallHover: null } : null))
+        };
+      })
+    };
+  }
+}
+</script>
+</body>
+</html>
