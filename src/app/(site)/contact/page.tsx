@@ -21,7 +21,7 @@ export default function ContactPage() {
           <p className="m-0 max-w-[40ch] text-[13px] leading-[1.8] text-muted">
             If a work catches your eye, feel free to reach out. I&rsquo;m happy to
             share more photos, dimensions, and framing options, and to talk
-            through shipping. Studio visits in Prague by arrangement.
+            through shipping.
           </p>
         </div>
 

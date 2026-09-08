@@ -14,110 +14,126 @@ export default async function HomePage() {
   const featured = await getFeaturedPaintings(3);
 
   return (
-    <div className="relative">
-      {/* Vertical edge name — desktop only */}
-      <div className="pointer-events-none absolute inset-y-0 left-0 hidden w-[72px] lg:block">
-        <div className="sticky top-[420px] h-0">
-          <span className="absolute left-9 top-0 block origin-top-left -rotate-90 whitespace-nowrap text-[10px] uppercase tracking-[0.42em] text-[#B6AE9F]">
-            Ірина Ізотова — Iryna Izotova
-          </span>
+    <div>
+      {/*
+        The edge label's containing block deliberately stops before the contact
+        strip: a sticky element can only travel within its containing block, so
+        ending this wrapper here is what makes the label come to rest above the
+        contact section and footer instead of riding over them.
+      */}
+      <div className="relative">
+        {/* Vertical edge name — desktop only */}
+        {/* bottom-16 keeps the label from coming to rest flush against the
+            contact section's top border — it stops 64px short of it. */}
+        <div className="pointer-events-none absolute bottom-16 left-0 top-0 hidden w-[72px] lg:block">
+          <div className="sticky top-[420px] h-0">
+            {/*
+            Rotated -90deg about its top-left corner, so horizontally it takes
+            up its line-height (~15px), not its width, starting at `left`.
+            At left-9 (36px) it ran to ~51px and collided with content, which
+            starts at the 48px page gutter. left-4 leaves a clear channel.
+          */}
+            <span className="absolute left-4 top-0 block origin-top-left -rotate-90 whitespace-nowrap text-[10px] uppercase tracking-[0.42em] text-[#B6AE9F]">
+              Ірина Ізотова — Iryna Izotova
+            </span>
+          </div>
         </div>
-      </div>
 
-      {/* Hero */}
-      <section className="px-6 pb-0 pt-2 sm:px-12">
-        <div className="relative h-[300px] w-full animate-softIn sm:h-[560px]">
+        {/* Hero */}
+        <section className="px-6 pb-0 pt-2 sm:px-12">
+          <div className="hero-frame relative w-full animate-softIn">
+            <div
+              className="absolute inset-0"
+              style={{
+                background:
+                  "repeating-linear-gradient(112deg, #EDE9E1 0 9px, #F4F1EA 9px 18px)",
+              }}
+            />
+            {featured[0]?.image_url && (
+              <Image
+                src={featured[0].image_url}
+                alt={featured[0].title}
+                fill
+                priority
+                sizes="(max-width: 1280px) 100vw, 1136px"
+                className="object-cover"
+              />
+            )}
+          </div>
+          <div className="mt-8 flex flex-wrap items-end justify-between gap-4">
+            <h1 className="m-0 max-w-[15ch] font-serif text-[42px] font-normal leading-[1.02] tracking-[-0.01em] sm:text-[74px]">
+              {SITE.artist}
+            </h1>
+            <p className="m-0 max-w-[30ch] font-serif text-[19px] italic leading-[1.35] text-ink-soft sm:text-[24px]">
+              Soft watercolours, quiet geometry, and swallows in both.
+            </p>
+          </div>
+        </section>
+
+        {/* Divider */}
+        <div className="flex items-center gap-3.5 px-6 py-14 sm:px-12">
+          <div className="h-px flex-1 bg-line" />
+          <div className="h-1.5 w-1.5 rotate-45 bg-accent" />
+          <div className="h-px flex-1 bg-line" />
+        </div>
+
+        {/* About */}
+        <Reveal
+          as="section"
+          className="grid items-start gap-8 px-6 pb-24 sm:grid-cols-[0.85fr_1.15fr] sm:gap-16 sm:px-12"
+        >
           <div
-            className="absolute inset-0"
+            className="h-[300px] w-full sm:h-[420px]"
             style={{
               background:
-                "repeating-linear-gradient(112deg, #EDE9E1 0 9px, #F4F1EA 9px 18px)",
+                "repeating-linear-gradient(112deg, #EAE5DC 0 9px, #F2EEE7 9px 18px)",
             }}
           />
-          {featured[0]?.image_url && (
-            <Image
-              src={featured[0].image_url}
-              alt={featured[0].title}
-              fill
-              priority
-              sizes="(max-width: 1280px) 100vw, 1136px"
-              className="object-cover"
-            />
-          )}
-        </div>
-        <div className="mt-8 flex flex-wrap items-end justify-between gap-4">
-          <h1 className="m-0 max-w-[15ch] font-serif text-[42px] font-normal leading-[1.02] tracking-[-0.01em] sm:text-[74px]">
-            {SITE.artist}
-          </h1>
-          <p className="m-0 max-w-[30ch] font-serif text-[19px] italic leading-[1.35] text-ink-soft sm:text-[24px]">
-            Soft watercolours, quiet geometry, and swallows in both.
-          </p>
-        </div>
-      </section>
-
-      {/* Divider */}
-      <div className="flex items-center gap-3.5 px-6 py-14 sm:px-12">
-        <div className="h-px flex-1 bg-line" />
-        <div className="h-1.5 w-1.5 rotate-45 bg-accent" />
-        <div className="h-px flex-1 bg-line" />
-      </div>
-
-      {/* About */}
-      <Reveal
-        as="section"
-        className="grid items-start gap-8 px-6 pb-24 sm:grid-cols-[0.85fr_1.15fr] sm:gap-16 sm:px-12"
-      >
-        <div
-          className="h-[300px] w-full sm:h-[420px]"
-          style={{
-            background:
-              "repeating-linear-gradient(112deg, #EAE5DC 0 9px, #F2EEE7 9px 18px)",
-          }}
-        />
-        <div>
-          <div className="text-[9px] uppercase tracking-[0.24em] text-blue">
-            About the artist
+          <div>
+            <div className="text-[9px] uppercase tracking-[0.24em] text-blue">
+              About the artist
+            </div>
+            <p className="mt-[18px] max-w-[46ch] font-serif text-[21px] leading-[1.5] text-ink sm:text-[26px]">
+              {ABOUT}
+            </p>
+            <p className="mt-[22px] max-w-[52ch] text-[13px] leading-[1.75] text-muted">
+              {ABOUT_2}
+            </p>
+            <Link
+              href="/gallery"
+              className="mt-7 inline-block border-b border-accent pb-[3px] text-[12px] uppercase tracking-[0.12em]"
+            >
+              See all works
+            </Link>
           </div>
-          <p className="mt-[18px] max-w-[46ch] font-serif text-[21px] leading-[1.5] text-ink sm:text-[26px]">
-            {ABOUT}
-          </p>
-          <p className="mt-[22px] max-w-[52ch] text-[13px] leading-[1.75] text-muted">
-            {ABOUT_2}
-          </p>
-          <Link
-            href="/gallery"
-            className="mt-7 inline-block border-b border-accent pb-[3px] text-[12px] uppercase tracking-[0.12em]"
-          >
-            See all works
-          </Link>
-        </div>
-      </Reveal>
-
-      {/* Featured */}
-      <section className="px-6 pb-24 sm:px-12">
-        <Reveal className="mb-8 flex items-baseline justify-between gap-4">
-          <h2 className="m-0 font-serif text-[28px] font-normal sm:text-[38px]">
-            Featured works
-          </h2>
-          <span className="text-[11px] uppercase tracking-[0.16em] text-muted">
-            2024 — 2026
-          </span>
         </Reveal>
-        {featured.length === 0 ? (
-          <p className="font-serif text-[20px] italic text-muted">
-            Works will appear here once they&rsquo;re added in the studio.
-          </p>
-        ) : (
-          <div className="grid gap-9 sm:grid-cols-3 sm:gap-10">
-            {/* 120ms between neighbours, per interaction spec 02 */}
-            {featured.map((p, i) => (
-              <Reveal key={p.id} delay={i * 120}>
-                <PaintingCard painting={p} showYear />
-              </Reveal>
-            ))}
-          </div>
-        )}
-      </section>
+
+        {/* Featured */}
+        <section className="px-6 pb-24 sm:px-12">
+          <Reveal className="mb-8 flex items-baseline justify-between gap-4">
+            <h2 className="m-0 font-serif text-[28px] font-normal sm:text-[38px]">
+              Featured works
+            </h2>
+            <span className="text-[11px] uppercase tracking-[0.16em] text-muted">
+              2024 — 2026
+            </span>
+          </Reveal>
+          {featured.length === 0 ? (
+            <p className="font-serif text-[20px] italic text-muted">
+              Works will appear here once they&rsquo;re added in the studio.
+            </p>
+          ) : (
+            <div className="grid gap-9 sm:grid-cols-3 sm:gap-10">
+              {/* 120ms between neighbours, per interaction spec 02 */}
+              {featured.map((p, i) => (
+                <Reveal key={p.id} delay={i * 120}>
+                  <PaintingCard painting={p} showYear />
+                </Reveal>
+              ))}
+            </div>
+          )}
+        </section>
+      </div>
 
       {/* Contact strip */}
       <Reveal
@@ -150,7 +166,7 @@ export default async function HomePage() {
               Instagram — {SITE.instagramHandle}
             </a>
             <span className="text-[12px] tracking-[0.04em] text-muted">
-              Based in Prague — studio visits by arrangement
+              Based in Prague. Contact for more information.
             </span>
           </div>
         </div>

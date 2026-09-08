@@ -60,6 +60,112 @@ body {
   }
 }
 
+/*
+ * Homepage hero.
+ *
+ * A fixed 560px hero pushed the <h1> below the fold on laptop-height windows,
+ * so the first thing a visitor saw was a cropped headline. Size it against the
+ * viewport instead, reserving room for the header, the title and a sliver of
+ * what follows — so the fold always lands somewhere deliberate.
+ *
+ * The plain `height` above each clamp is a fallback: if a browser doesn't
+ * understand `svh` it ignores that line and keeps the fixed value, rather than
+ * dropping the declaration and collapsing the hero to zero. `svh` (not `vh`)
+ * keeps mobile from resizing the hero as the address bar hides.
+ */
+.hero-frame {
+  height: 300px;
+  height: clamp(220px, calc(100svh - 260px), 340px);
+}
+
+@media (min-width: 640px) {
+  .hero-frame {
+    height: 560px;
+    height: clamp(300px, calc(100svh - 340px), 560px);
+  }
+}
+
+/* --- Custom flower pointer over painting thumbnails (see <CursorFlower />) --- */
+
+/* Only hide the native cursor once the follower is actually running. */
+[data-flower-cursor="on"] [data-flower-target] {
+  cursor: none;
+}
+
+.cursor-flower {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 90;
+  pointer-events: none;
+  will-change: transform;
+}
+
+/*
+ * Three nested layers, each owning one transform, so they never fight:
+ *   .cursor-flower       — position, written by JS every frame
+ *   &__inner             — fade + scale on appear (CSS transition)
+ *   &__spin              — continuous rotation (CSS animation)
+ */
+.cursor-flower__inner {
+  display: block;
+  width: 56px;
+  height: 56px;
+  margin: -28px 0 0 -28px; /* centre on the pointer */
+  /* Swap to theme("colors.accent") for the orange variant. */
+  color: theme("colors.blue");
+  opacity: 0;
+  transform: scale(0.55);
+  transition:
+    opacity 240ms ease,
+    transform 420ms cubic-bezier(0.2, 0.7, 0.3, 1);
+}
+
+.cursor-flower[data-visible="true"] .cursor-flower__inner {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.cursor-flower__spin {
+  display: block;
+  animation: flower-spin 14s linear infinite;
+  /* Only burn frames while it's actually on screen. */
+  animation-play-state: paused;
+}
+
+.cursor-flower[data-visible="true"] .cursor-flower__spin {
+  animation-play-state: running;
+}
+
+@keyframes flower-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* No hover on touch devices — never show it there. */
+@media (pointer: coarse) {
+  .cursor-flower {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cursor-flower__inner {
+    transition: opacity 240ms ease;
+    transform: none;
+  }
+  .cursor-flower[data-visible="true"] .cursor-flower__inner {
+    transform: none;
+  }
+  .cursor-flower__spin {
+    animation: none;
+  }
+}
+
 a {
   color: theme("colors.accent-deep");
   text-decoration: none;

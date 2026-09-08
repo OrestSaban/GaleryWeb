@@ -20,7 +20,10 @@ export function PaintingCard({
       href={`/gallery/${id}`}
       className="group block transition-transform duration-[420ms] ease-[cubic-bezier(.2,.7,.3,1)] hover:-translate-y-1.5"
     >
-      <div className="relative aspect-[4/5] w-full overflow-hidden shadow-[0_2px_8px_-4px_rgba(30,28,25,0.18)] transition-shadow duration-[420ms] group-hover:shadow-[0_24px_44px_-26px_rgba(30,28,25,0.4)]">
+      <div
+        data-flower-target
+        className="relative aspect-[4/5] w-full overflow-hidden shadow-[0_2px_8px_-4px_rgba(30,28,25,0.18)] transition-shadow duration-[420ms] group-hover:shadow-[0_24px_44px_-26px_rgba(30,28,25,0.4)]"
+      >
         {image_url ? (
           <FadeInImage
             src={image_url}

@@ -2,9 +2,9 @@ export const SITE = {
   artist: "Iryna Izotova",
   location: "Prague",
   strapline: "Prague · Watercolour & Geometry",
-  email: "studio@irynaizotova.art",
-  instagramHandle: "@iryna.izotova",
-  instagramUrl: "https://instagram.com/iryna.izotova",
+  email: "studio@irynaizotova.com",
+  instagramHandle: "@irynkaa_i",
+  instagramUrl: "https://instagram.com/irynkaa_i",
   origin: "Ivano-Frankivsk → Prague",
 };
 
