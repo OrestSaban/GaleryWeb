@@ -82,13 +82,15 @@ export default async function HomePage() {
           as="section"
           className="grid items-start gap-8 px-6 pb-24 sm:grid-cols-[0.85fr_1.15fr] sm:gap-16 sm:px-12"
         >
-          <div
-            className="h-[300px] w-full sm:h-[420px]"
-            style={{
-              background:
-                "repeating-linear-gradient(112deg, #EAE5DC 0 9px, #F2EEE7 9px 18px)",
-            }}
-          />
+          <div className="relative h-[300px] w-full overflow-hidden sm:h-[420px]">
+            <Image
+              src="/artist_photo.jpeg"
+              alt="Iryna Izotova"
+              fill
+              className="object-cover object-center"
+              sizes="(max-width: 640px) 100vw, 45vw"
+            />
+          </div>
           <div>
             <div className="text-[9px] uppercase tracking-[0.24em] text-blue">
               About the artist
