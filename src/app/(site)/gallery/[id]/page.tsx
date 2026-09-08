@@ -99,12 +99,17 @@ export default async function PaintingDetailPage({
           </div>
         </div>
 
-        <div>
-          <h1 className="m-0 font-serif text-[32px] font-normal leading-[1.08] sm:text-[46px]">
+        {/*
+          `min-w-0` overrides a grid item's automatic min-content floor. Without
+          it a single long unbroken value — a pasted medium, say — widens this
+          column past its 1fr share and squeezes the image next to it.
+        */}
+        <div className="min-w-0">
+          <h1 className="m-0 break-words font-serif text-[32px] font-normal leading-[1.08] sm:text-[46px]">
             {painting.title}
           </h1>
           {painting.collection && (
-            <div className="mt-3 text-[11px] uppercase tracking-[0.18em] text-accent-deep">
+            <div className="mt-3 break-words text-[11px] uppercase tracking-[0.18em] text-accent-deep">
               {painting.collection.name}
             </div>
           )}
@@ -115,14 +120,26 @@ export default async function PaintingDetailPage({
             <div className="h-px flex-1 bg-line" />
           </div>
 
+          {/*
+            `whitespace-pre-line` keeps the blank lines the artist typed: this
+            is a story field, and without it every paragraph runs together.
+          */}
+          {painting.description && (
+            <p className="mb-[30px] whitespace-pre-line break-words text-[14px] leading-[1.8] text-ink-soft">
+              {painting.description}
+            </p>
+          )}
+
           {specs.length > 0 && (
             <dl className="m-0 grid grid-cols-2 gap-x-4 gap-y-[22px]">
               {specs.map((s) => (
-                <div key={s.k}>
+                <div key={s.k} className="min-w-0">
                   <dt className="text-[9px] uppercase tracking-[0.22em] text-muted">
                     {s.k}
                   </dt>
-                  <dd className="m-0 mt-[7px] text-[14px] text-ink">{s.v}</dd>
+                  <dd className="m-0 mt-[7px] break-words text-[14px] text-ink">
+                    {s.v}
+                  </dd>
                 </div>
               ))}
             </dl>

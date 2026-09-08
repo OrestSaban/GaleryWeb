@@ -8,6 +8,22 @@ export const SITE = {
   origin: "Ivano-Frankivsk → Prague",
 };
 
+/**
+ * Caption-length caps, shared by the form (`maxLength`) and the actions that
+ * validate what actually arrives — `maxLength` is a browser-side courtesy and
+ * says nothing about a pasted or hand-posted payload.
+ *
+ * These are laid out in a narrow two-column grid beside the work, so an
+ * overlong value is a layout problem before it is a data problem.
+ */
+export const FIELD_MAX = {
+  title: 120,
+  medium: 120,
+  dimensions: 60,
+  price: 60,
+  description: 2000,
+} as const;
+
 export function cn(...classes: Array<string | false | null | undefined>) {
   return classes.filter(Boolean).join(" ");
 }

@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import { storagePathFromPublicUrl } from "@/lib/utils";
+import { FIELD_MAX, storagePathFromPublicUrl } from "@/lib/utils";
 import { slugify } from "@/lib/slug";
 
 type SupabaseServerClient = ReturnType<typeof createClient>;
@@ -53,6 +53,21 @@ function str(v: FormDataEntryValue | null) {
   return s.length ? s : null;
 }
 
+/**
+ * Names the first field that busts its cap. Rejecting beats truncating: a
+ * silently clipped caption looks saved but isn't what was typed.
+ */
+function tooLong(formData: FormData): string | null {
+  for (const [name, max] of Object.entries(FIELD_MAX)) {
+    const value = str(formData.get(name));
+    if (value && value.length > max) {
+      const label = name[0].toUpperCase() + name.slice(1);
+      return `${label} is too long — ${value.length} characters, limit is ${max}.`;
+    }
+  }
+  return null;
+}
+
 /** Positive integer from a form field, or null. Used for image dimensions. */
 function intOrNull(v: FormDataEntryValue | null) {
   const raw = str(v);
@@ -81,6 +96,9 @@ export async function createPainting(formData: FormData): Promise<ActionResult> 
   if (!image_url) return { ok: false, error: "An image is required." };
   if (!collection_id) return { ok: false, error: "Choose a collection." };
 
+  const lengthError = tooLong(formData);
+  if (lengthError) return { ok: false, error: lengthError };
+
   const yearRaw = str(formData.get("year"));
   const year = yearRaw ? Number.parseInt(yearRaw, 10) : null;
   if (yearRaw && Number.isNaN(year)) return { ok: false, error: "Year must be a number." };
@@ -95,6 +113,7 @@ export async function createPainting(formData: FormData): Promise<ActionResult> 
     image_url,
     image_width: intOrNull(formData.get("image_width")),
     image_height: intOrNull(formData.get("image_height")),
+    description: str(formData.get("description")),
     is_available: formData.get("is_available") === "on",
     is_visible: formData.get("is_visible") === "on",
     sort_order: Number.parseInt(str(formData.get("sort_order")) ?? "0", 10) || 0,
@@ -115,6 +134,9 @@ export async function updatePainting(
   const collection_id = str(formData.get("collection_id"));
   if (!title) return { ok: false, error: "Title is required." };
   if (!collection_id) return { ok: false, error: "Choose a collection." };
+
+  const lengthError = tooLong(formData);
+  if (lengthError) return { ok: false, error: lengthError };
 
   const yearRaw = str(formData.get("year"));
   const year = yearRaw ? Number.parseInt(yearRaw, 10) : null;
@@ -139,6 +161,7 @@ export async function updatePainting(
             image_height: intOrNull(formData.get("image_height")),
           }
         : {}),
+      description: str(formData.get("description")),
       is_available: formData.get("is_available") === "on",
       is_visible: formData.get("is_visible") === "on",
       sort_order: Number.parseInt(str(formData.get("sort_order")) ?? "0", 10) || 0,

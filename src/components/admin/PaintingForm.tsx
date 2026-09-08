@@ -6,6 +6,7 @@ import { useEffect, useRef, useState, useTransition } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { createPainting, updatePainting } from "@/app/admin/actions";
 import { readImageSize, readImageSizeFromUrl, type ImageSize } from "@/lib/imageSize";
+import { FIELD_MAX } from "@/lib/utils";
 import type { Collection, Painting } from "@/lib/types";
 
 type Props = {
@@ -214,7 +215,7 @@ export function PaintingForm({ collections, painting }: Props) {
 
         {/* Fields */}
         <div className="mt-4 grid grid-cols-2 gap-3">
-          <Field label="Title" name="title" required span={2} defaultValue={painting?.title} placeholder="Swallows, Late April" />
+          <Field label="Title" name="title" required span={2} maxLength={FIELD_MAX.title} defaultValue={painting?.title} placeholder="Swallows, Late April" />
 
           <label className="block">
             <span className="mb-1.5 block text-[9px] uppercase tracking-[0.18em] text-muted">
@@ -238,10 +239,24 @@ export function PaintingForm({ collections, painting }: Props) {
           </label>
 
           <Field label="Year" name="year" type="number" defaultValue={painting?.year ?? ""} placeholder="2026" />
-          <Field label="Medium" name="medium" defaultValue={painting?.medium ?? ""} placeholder="Watercolour on paper" />
-          <Field label="Dimensions" name="dimensions" defaultValue={painting?.dimensions ?? ""} placeholder="40 × 30 cm" />
-          <Field label="Price" name="price" span={2} defaultValue={painting?.price ?? ""} placeholder="€450 · price TBC · not for sale" />
+          <Field label="Medium" name="medium" maxLength={FIELD_MAX.medium} defaultValue={painting?.medium ?? ""} placeholder="Watercolour on paper" />
+          <Field label="Dimensions" name="dimensions" maxLength={FIELD_MAX.dimensions} defaultValue={painting?.dimensions ?? ""} placeholder="40 × 30 cm" />
+          <Field label="Price" name="price" span={2} maxLength={FIELD_MAX.price} defaultValue={painting?.price ?? ""} placeholder="€450 · price TBC · not for sale" />
           <Field label="Sort order" name="sort_order" type="number" defaultValue={painting?.sort_order ?? 0} placeholder="0" />
+
+          <label className="col-span-2 block">
+            <span className="mb-1.5 block text-[9px] uppercase tracking-[0.18em] text-muted">
+              Description
+            </span>
+            <textarea
+              name="description"
+              rows={4}
+              maxLength={FIELD_MAX.description}
+              defaultValue={painting?.description ?? ""}
+              placeholder="The story behind this work, materials used, inspiration…"
+              className="w-full resize-y border border-line bg-white px-2.5 py-2 text-[13px] outline-none focus:border-blue"
+            />
+          </label>
         </div>
 
         {/* Toggles */}
@@ -300,6 +315,7 @@ function Field({
   span = 1,
   defaultValue,
   placeholder,
+  maxLength,
 }: {
   label: string;
   name: string;
@@ -308,6 +324,7 @@ function Field({
   span?: 1 | 2;
   defaultValue?: string | number | null;
   placeholder?: string;
+  maxLength?: number;
 }) {
   return (
     <label className={`block ${span === 2 ? "col-span-2" : ""}`}>
@@ -318,6 +335,7 @@ function Field({
         name={name}
         type={type}
         required={required}
+        maxLength={maxLength}
         defaultValue={defaultValue ?? undefined}
         placeholder={placeholder}
         className="w-full border border-line bg-white px-2.5 py-2 text-[13px] outline-none focus:border-blue"

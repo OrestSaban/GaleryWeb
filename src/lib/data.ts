@@ -6,7 +6,7 @@ import { SUPABASE_ENV_MISSING } from "@/lib/supabase/env";
 import type { Collection, Painting, PaintingWithCollection } from "@/lib/types";
 
 const PAINTING_SELECT =
-  "id,title,collection_id,medium,dimensions,year,price,image_url,image_width,image_height,is_available,is_visible,sort_order,created_at,collection:collections(id,name,slug)";
+  "id,title,collection_id,medium,dimensions,year,price,image_url,image_width,image_height,description,is_available,is_visible,sort_order,created_at,collection:collections(id,name,slug)";
 
 /**
  * Public reads degrade to an empty result so a transient Supabase blip renders

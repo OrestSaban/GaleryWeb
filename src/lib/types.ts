@@ -16,6 +16,7 @@ export type Painting = {
   image_url: string | null;
   image_width: number | null;
   image_height: number | null;
+  description: string | null;
   is_available: boolean;
   is_visible: boolean;
   sort_order: number;
